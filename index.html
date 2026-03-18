@@ -435,28 +435,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
 <script>
 // ═══════════════════════════════════════
 // 100 FRAME DEFINITIONS
-  let isPlaying = false;
 
-function togMus() {
-  const music = document.getElementById("music");
-  const disc = document.getElementById("disc");
-  const msub = document.getElementById("msub");
-  const meq = document.getElementById("meq");
-
-  if (!isPlaying) {
-    music.play();
-    disc.classList.add("sp");
-    msub.innerText = "Playing...";
-    meq.style.display = "flex";
-    isPlaying = true;
-  } else {
-    music.pause();
-    disc.classList.remove("sp");
-    msub.innerText = "Tap to play";
-    meq.style.display = "none";
-    isPlaying = false;
-  }
-}
 // Format: {id,n(name),c(cat),bg(gradient),bd(border),fi(filter),ov(overlay)}
 // ═══════════════════════════════════════
 const F = [
@@ -1083,6 +1062,12 @@ function sendChat(){
 // ═══════════ MUSIC ═══════════
 function togMus(){
   S.musicOn=!S.musicOn;
+  const music = document.getElementById('music');
+  if (S.musicOn) {
+    music.play().catch(e=>console.log(e));
+  } else {
+    music.pause();
+  }
   document.getElementById('disc').classList.toggle('sp',S.musicOn);
   document.getElementById('meq').style.display=S.musicOn?'flex':'none';
   document.getElementById('msub').textContent=S.musicOn?'Now playing...':'Tap to play';
