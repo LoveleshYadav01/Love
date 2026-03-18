@@ -420,7 +420,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
 </div>
 
 </div><!-- end .app -->
-
+<audio id="music" src="music/song.mp3" loop></audio>
 <!-- Music Player -->
 <div class="mus" id="musp" onclick="togMus()">
   <div class="disc" id="disc">🎵</div>
@@ -435,6 +435,28 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
 <script>
 // ═══════════════════════════════════════
 // 100 FRAME DEFINITIONS
+  let isPlaying = false;
+
+function togMus() {
+  const music = document.getElementById("music");
+  const disc = document.getElementById("disc");
+  const msub = document.getElementById("msub");
+  const meq = document.getElementById("meq");
+
+  if (!isPlaying) {
+    music.play();
+    disc.classList.add("sp");
+    msub.innerText = "Playing...";
+    meq.style.display = "flex";
+    isPlaying = true;
+  } else {
+    music.pause();
+    disc.classList.remove("sp");
+    msub.innerText = "Tap to play";
+    meq.style.display = "none";
+    isPlaying = false;
+  }
+}
 // Format: {id,n(name),c(cat),bg(gradient),bd(border),fi(filter),ov(overlay)}
 // ═══════════════════════════════════════
 const F = [
