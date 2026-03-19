@@ -1576,6 +1576,23 @@
       border-radius: 6px;
       border: 1px solid #ddd
     }
+  
+    /* Fullscreen Mode */
+    body.fs-mode .nav, 
+    body.fs-mode #hero, 
+    body.fs-mode #lgen, 
+    body.fs-mode #smem, 
+    body.fs-mode .sepdiv, 
+    body.fs-mode .footer { display: none !important; }
+    
+    body.fs-mode { background: var(--bg); overflow: hidden; padding: 0; margin: 0; }
+    body.fs-mode .app { padding: 0; max-width: 100%; }
+    body.fs-mode #priv { padding-top: 0; margin-top: 0; min-height: 100vh; display: flex; flex-direction: column; }
+    body.fs-mode .cs { height: 100vh; border-radius: 0; border: none; display: flex; flex-direction: column; box-shadow: none; margin: 0; }
+    body.fs-mode .msgs { flex: 1; height: auto; max-height: none; border-radius: 0; }
+    
+    .mdel { font-size: 13px; cursor: pointer; opacity: 0.6; padding: 2px 4px; border-radius: 4px; transition: 0.2s; }
+    .mdel:hover { opacity: 1; background: rgba(255,0,0,0.1); }
   </style>
   <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
 </head>
@@ -1942,8 +1959,18 @@
       </div>
     </div>
 
+    
+    <!-- DEL MODAL -->
+    <div class="modc" id="dmod">
+      <div class="modb" style="width:280px;text-align:center;padding:24px">
+        <div style="font-family:'Playfair Display',serif;font-size:20px;margin-bottom:16px;color:var(--rd)">Delete Message</div>
+        <button class="btn btnp" style="width:100%;margin-bottom:10px;background:var(--r);border:none" onclick="delExe(true)">🗑️ Delete for Everyone</button>
+        <button class="btn btns" style="width:100%;margin-bottom:10px;border-color:var(--rd);color:var(--rd)" onclick="delExe(false)">🗑️ Delete for Me</button>
+        <button class="btn btns" style="width:100%;border:none" onclick="document.getElementById('dmod').classList.remove('on')">Cancel</button>
+      </div>
+    </div>
     <!-- Footer -->
-    <div style="text-align:center;padding:36px 16px 80px;color:var(--mu);font-size:13px">
+    <div class="footer" id="footer" style="text-align:center;padding:36px 16px 80px;color:var(--mu);font-size:13px">
       <div style="font-size:22px;margin-bottom:6px">💕</div>
       <p>Made with love · <span style="color:var(--r)">Kanhaiya</span></p>
     </div>
@@ -2602,17 +2629,21 @@ function setupConn(conn) {
   document.getElementById('p2p-stat').textContent = "(Connected 💕)";
   document.getElementById('p2p-stat').style.color = 'var(--rd)';
   document.getElementById('btn-games').style.display = 'block';
+  document.body.classList.add('fs-mode');
   showToast("💕 Connected to partner!");
   
   conn.on('data', data => {
     if(data.type === 'chat') {
-      S.msgs.push({t:data.val, me:false, time:data.time, n:data.name});
+      S.msgs.push({id:data.id, t:data.val, me:false, time:data.time, n:data.name});
       renderMsgs();
     } else if(data.type === 'media') {
-      S.msgs.push({file:data.val, isVid:data.isVid, me:false, time:data.time, n:data.name});
+      S.msgs.push({id:data.id, file:data.val, isVid:data.isVid, me:false, time:data.time, n:data.name});
       renderMsgs();
     } else if(data.type === 'game') {
       handleGameSync(data);
+    } else if(data.type === 'chatAct' && data.act === 'del') {
+      S.msgs = S.msgs.filter(m => m.id !== data.id);
+      renderMsgs();
     }
   });
   
@@ -2622,6 +2653,7 @@ function setupConn(conn) {
     document.getElementById('p2p-stat').textContent = "(Disconnected)";
     document.getElementById('p2p-stat').style.color = 'var(--mu)';
     document.getElementById('btn-games').style.display = 'none';
+    document.body.classList.remove('fs-mode');
   });
 }
 
@@ -2633,6 +2665,7 @@ function doLogout(){
   document.getElementById('lpass').value='';
   document.getElementById('lalert').innerHTML='';
   document.getElementById('btn-games').style.display='none';
+  document.body.classList.remove('fs-mode');
   document.getElementById('p2p-stat').textContent = "(Connecting...)";
   document.getElementById('p2p-stat').style.color = 'var(--mu)';
 }
@@ -2643,7 +2676,10 @@ function renderMsgs(){
     <div class="bb ${m.me?'me':'th'}">
       ${!m.me && m.n ? `<div style="font-size:10px;font-weight:700;margin-bottom:2px;opacity:0.8">${m.n}</div>` : ''}
       ${m.file ? (m.isVid ? `<video src="${m.file}" controls style="max-width:100%;border-radius:8px;outline:none"></video>` : `<img src="${m.file}" style="max-width:100%;border-radius:8px">`) : m.t}
-      <div class="bt">${m.time}</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:4px">
+        <div class="bt">${m.time}</div>
+        ${m.me ? `<div class="mdel" onclick="delPrompt('${m.id}')">🗑️</div>` : ''}
+      </div>
     </div>
   `).join('');
   area.scrollTop=area.scrollHeight;
@@ -2655,8 +2691,9 @@ function sendChat(){
   if(!txt)return;
   const now=new Date();
   const time=String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
-  S.msgs.push({t:txt,me:true,time});
-  if(S.conn) S.conn.send({type:'chat', val:txt, time, name:S.loginName});
+  const id=Date.now().toString(36)+Math.random().toString(36).slice(2);
+  S.msgs.push({id,t:txt,me:true,time});
+  if(S.conn) S.conn.send({type:'chat', id, val:txt, time, name:S.loginName});
   inp.value='';renderMsgs();
 }
 
@@ -2669,12 +2706,24 @@ function onAttSel() {
     const res = e.target.result;
     const now=new Date();
     const time=String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
-    S.msgs.push({file:res, isVid, me:true, time});
-    if(S.conn) S.conn.send({type:'media', val:res, isVid, time, name:S.loginName});
+    const id=Date.now().toString(36)+Math.random().toString(36).slice(2);
+    S.msgs.push({id, file:res, isVid, me:true, time});
+    if(S.conn) S.conn.send({type:'media', id, val:res, isVid, time, name:S.loginName});
     renderMsgs();
   };
   reader.readAsDataURL(f);
   document.getElementById('fatt').value='';
+}
+
+let dId = null;
+function delPrompt(id) { dId = id; document.getElementById('dmod').classList.add('on'); }
+function delExe(forAll) {
+  document.getElementById('dmod').classList.remove('on');
+  if(!dId) return;
+  S.msgs = S.msgs.filter(m => m.id !== dId);
+  renderMsgs();
+  if(forAll && S.conn) S.conn.send({type:'chatAct', act:'del', id:dId});
+  dId = null;
 }
 
 // ═══════════ GAMES LOGIC ═══════════
