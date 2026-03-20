@@ -1816,8 +1816,7 @@
                <button class="btn btns" id="tab-signup" onclick="setAuthTab('signup')">Create ID</button>
             </div>
             <div id="lalert"></div>
-            <div class="ig"><label>Your Name</label><input type="text" class="ii" id="lname" placeholder="Your Name..." /></div>
-            <div class="ig"><label>Unique ID</label><input type="text" class="ii" id="lid" placeholder="Enter ID..." /></div>
+                        <div class="ig"><label>Unique ID</label><input type="text" class="ii" id="lid" placeholder="Enter ID..." /></div>
             <div class="ig"><label>Secret Passphrase</label><input type="password" class="ii" id="lpass"
                 placeholder="Enter passphrase..." onkeypress="if(event.key==='Enter')doAuth()" /></div>
             <button class="btn btnp" id="auth-btn" style="width:100%;justify-content:center;margin-top:6px" onclick="doAuth()">💕 Login</button>
@@ -1972,6 +1971,16 @@
         <button class="btn btnp" style="width:100%;margin-bottom:10px;background:var(--r);border:none" onclick="delExe(true)">🗑️ Delete for Everyone</button>
         <button class="btn btns" style="width:100%;margin-bottom:10px;border-color:var(--rd);color:var(--rd)" onclick="delExe(false)">🗑️ Delete for Me</button>
         <button class="btn btns" style="width:100%;border:none" onclick="document.getElementById('dmod').classList.remove('on')">Cancel</button>
+      </div>
+    </div>
+
+    <!-- NAME MODAL -->
+    <div class="modc" id="nmod">
+      <div class="modb" style="width:300px;text-align:center;padding:30px">
+        <div style="font-family:'Playfair Display',serif;font-size:22px;margin-bottom:10px;color:var(--rd)">💕 Connected!</div>
+        <p style="font-size:13px;color:var(--mu);margin-bottom:20px">Please enter your name to join the chat.</p>
+        <input type="text" class="ii" id="cname" placeholder="Your Name..." style="margin-bottom:16px;width:100%" onkeypress="if(event.key==='Enter')joinChat()"/>
+        <button class="btn btnp" style="width:100%;justify-content:center" onclick="joinChat()">Start Chatting</button>
       </div>
     </div>
     <!-- Footer -->
@@ -2582,8 +2591,13 @@
 
 // ═══════════ PRIVATE SPACE & P2P LOGIC ═══════════
 async function getSHA(str) {
-  const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(str));
-  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+  if (crypto && crypto.subtle) {
+    const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(str));
+    return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+  } else {
+    // Fallback for non-HTTPS local networks
+    return btoa(unescape(encodeURIComponent(str))).replace(/[^a-zA-Z0-9]/g, '').toLowerCase().substring(0, 16);
+  }
 }
 
 function setAuthTab(t) {
@@ -2606,20 +2620,19 @@ function deleteAccount() {
 
 async function doAuth(){
   const mode = S.authMode || 'login';
-  const name=document.getElementById('lname').value.trim();
   const idStr=document.getElementById('lid').value.trim();
   const pass=document.getElementById('lpass').value;
   const al=document.getElementById('lalert');
-  if(!name){al.innerHTML='<div class="ae">Please enter your name 💭</div>';return;}
   if(!idStr){al.innerHTML='<div class="ae">Unique ID required 💭</div>';return;}
   if(!pass){al.innerHTML='<div class="ae">Passphrase required 🔒</div>';return;}
   
   if (mode === 'signup') {
-     localStorage.setItem('akakan_saved_account', JSON.stringify({ id: idStr, pass: pass, name: name }));
+     // Name will be saved later when they join
+     localStorage.setItem('akakan_saved_account', JSON.stringify({ id: idStr, pass: pass }));
      showToast("Account Created & Saved!");
   }
   
-  S.loggedIn=true;S.loginName=name;
+  S.loggedIn=false; // Set logged in after name is provided
   document.getElementById('lview').style.display='none';
   document.getElementById('cview').style.display='';
   
@@ -2655,8 +2668,40 @@ function becomeHost(hostId) {
   });
 }
 
+function joinChat() {
+  const nm = document.getElementById('cname').value.trim();
+  if(!nm) return;
+  S.loginName = nm;
+  S.loggedIn = true;
+  document.getElementById('nmod').classList.remove('on');
+  
+  const savedAcc = localStorage.getItem('akakan_saved_account');
+  if (savedAcc) {
+     try {
+       const d = JSON.parse(savedAcc);
+       d.name = nm;
+       localStorage.setItem('akakan_saved_account', JSON.stringify(d));
+     } catch(e){}
+  }
+}
+
 function setupConn(conn) {
   S.conn = conn;
+  const savedAcc = localStorage.getItem('akakan_saved_account');
+  if (savedAcc) {
+     try {
+       const d = JSON.parse(savedAcc);
+       if (d.name) {
+         S.loginName = d.name;
+         S.loggedIn = true;
+       }
+     } catch(e){}
+  }
+  if (!S.loginName) {
+     document.getElementById('nmod').classList.add('on');
+     setTimeout(()=>document.getElementById('cname').focus(), 100);
+  }
+
   document.getElementById('p2p-stat').textContent = "(Connected 💕)";
   document.getElementById('p2p-stat').style.color = 'var(--rd)';
   document.getElementById('btn-games').style.display = 'block';
@@ -3008,8 +3053,7 @@ function resetSycLocal(){
         const d = JSON.parse(savedAcc);
         document.getElementById('lid').value = d.id || '';
         document.getElementById('lpass').value = d.pass || '';
-        document.getElementById('lname').value = d.name || '';
-      } catch(e){}
+              } catch(e){}
     }
   </script>
 </body>
