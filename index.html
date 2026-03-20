@@ -2614,7 +2614,7 @@ function deleteAccount() {
   }
 }
 
-async function doAuth(){
+function doAuth(){
   const mode = S.authMode || 'login';
   const idStr=document.getElementById('lid').value.trim();
   const pass=document.getElementById('lpass').value.trim();
@@ -2644,8 +2644,8 @@ async function doAuth(){
   document.getElementById('lview').style.display='none';
   document.getElementById('cview').style.display='';
   
-  const hash = await getSHA(idStr + pass);
-  const hostId = 'akakan-' + hash + '-host';
+  const cleanCreds = (idStr + pass).toLowerCase().replace(/[^a-z0-9]/g, '');
+  const hostId = 'akakan-' + cleanCreds + '-host';
   
   S.msgs = [];
   renderMsgs();
@@ -3069,3 +3069,7 @@ function resetSycLocal(){
 </body>
 
 </html>
+
+
+
+
