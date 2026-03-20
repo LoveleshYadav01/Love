@@ -2622,11 +2622,12 @@ function doAuth(){
   if(!idStr){al.innerHTML='<div class="ae">Unique ID required 💭</div>';return;}
   if(!pass){al.innerHTML='<div class="ae">Passphrase required 🔒</div>';return;}
   
-  const isPreviouslyCreator = !!localStorage.getItem('akakan_saved_account');
+  let isPreviouslyCreator = false;
+  try { isPreviouslyCreator = !!localStorage.getItem('akakan_saved_account'); } catch(e){}
   const isCreatorMode = (mode === 'signup') || isPreviouslyCreator;
   
   if (mode === 'signup') {
-     localStorage.setItem('akakan_saved_account', JSON.stringify({ id: idStr, pass: pass }));
+     try { localStorage.setItem('akakan_saved_account', JSON.stringify({ id: idStr, pass: pass })); } catch(e){}
      showToast("Account Created & Saved!");
   }
   
@@ -2650,39 +2651,11 @@ function doAuth(){
   S.msgs = [];
   renderMsgs();
   
-  const pConf = {
+      const pConf = {
     config: {
       'iceServers': [
-        { urls: 'stun:openrelay.metered.ca:80' },
-        { urls: 'turn:openrelay.metered.ca:80', username: 'openrelayproject', credential: 'openrelayproject' },
-        { urls: 'turn:openrelay.metered.ca:443', username: 'openrelayproject', credential: 'openrelayproject' },
-        { urls: 'turn:openrelay.metered.ca:443?transport=tcp', username: 'openrelayproject', credential: 'openrelayproject' }
-      ]
-    }
-  };
-  S.peer = new Peer(pConf);
-  
-  S.peer.on('open', id => {
-    const conn = S.peer.connect(hostId);
-    conn.on('open', () => {
-      S.isHost = false;
-      setupConn(conn);
-    });
-  });
-  S.peer.on('error', err => {
-    if(err.type === 'peer-unavailable') becomeHost(hostId);
-  });
-}
-
-function becomeHost(hostId) {
-  S.peer.destroy();
-  const pConf = {
-    config: {
-      'iceServers': [
-        { urls: 'stun:openrelay.metered.ca:80' },
-        { urls: 'turn:openrelay.metered.ca:80', username: 'openrelayproject', credential: 'openrelayproject' },
-        { urls: 'turn:openrelay.metered.ca:443', username: 'openrelayproject', credential: 'openrelayproject' },
-        { urls: 'turn:openrelay.metered.ca:443?transport=tcp', username: 'openrelayproject', credential: 'openrelayproject' }
+        { url: 'stun:stun.l.google.com:19302', urls: 'stun:stun.l.google.com:19302' },
+        { url: 'stun:global.stun.twilio.com:3478?transport=udp', urls: 'stun:global.stun.twilio.com:3478?transport=udp' }
       ]
     }
   };
@@ -2716,7 +2689,8 @@ function joinChat() {
 
 function setupConn(conn) {
   S.conn = conn;
-  const savedAcc = localStorage.getItem('akakan_saved_account');
+  let savedAcc = null;
+  try { savedAcc = localStorage.getItem('akakan_saved_account'); } catch(e){}
   if (savedAcc) {
      try {
        const d = JSON.parse(savedAcc);
@@ -3076,7 +3050,8 @@ function resetSycLocal(){
     ['br', 'co', 'sa'].forEach(k => updSliderBg(document.getElementById('sl-' + k)));
     
     // Auth Init
-    const savedAcc = localStorage.getItem('akakan_saved_account');
+    let savedAcc = null;
+    try { savedAcc = localStorage.getItem('akakan_saved_account'); } catch(e){}
     if (savedAcc) {
       try {
         const d = JSON.parse(savedAcc);
