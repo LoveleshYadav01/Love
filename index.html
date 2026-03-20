@@ -2650,7 +2650,17 @@ function doAuth(){
   S.msgs = [];
   renderMsgs();
   
-  S.peer = new Peer();
+  const pConf = {
+    config: {
+      'iceServers': [
+        { urls: 'stun:openrelay.metered.ca:80' },
+        { urls: 'turn:openrelay.metered.ca:80', username: 'openrelayproject', credential: 'openrelayproject' },
+        { urls: 'turn:openrelay.metered.ca:443', username: 'openrelayproject', credential: 'openrelayproject' },
+        { urls: 'turn:openrelay.metered.ca:443?transport=tcp', username: 'openrelayproject', credential: 'openrelayproject' }
+      ]
+    }
+  };
+  S.peer = new Peer(pConf);
   
   S.peer.on('open', id => {
     const conn = S.peer.connect(hostId);
@@ -2666,7 +2676,17 @@ function doAuth(){
 
 function becomeHost(hostId) {
   S.peer.destroy();
-  S.peer = new Peer(hostId);
+  const pConf = {
+    config: {
+      'iceServers': [
+        { urls: 'stun:openrelay.metered.ca:80' },
+        { urls: 'turn:openrelay.metered.ca:80', username: 'openrelayproject', credential: 'openrelayproject' },
+        { urls: 'turn:openrelay.metered.ca:443', username: 'openrelayproject', credential: 'openrelayproject' },
+        { urls: 'turn:openrelay.metered.ca:443?transport=tcp', username: 'openrelayproject', credential: 'openrelayproject' }
+      ]
+    }
+  };
+  S.peer = new Peer(hostId, pConf);
   S.peer.on('open', id => {
     S.isHost = true;
     document.getElementById('p2p-stat').textContent = "(Waiting for partner...)";
