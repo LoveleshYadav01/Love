@@ -2650,8 +2650,7 @@ async function doAuth(){
   S.msgs = [];
   renderMsgs();
   
-  const pConf = { config: { 'iceServers': [ { urls: 'stun:stun.l.google.com:19302' }, { urls: 'stun:stun1.l.google.com:19302' } ] } };
-  S.peer = new Peer(pConf);
+  S.peer = new Peer();
   
   S.peer.on('open', id => {
     const conn = S.peer.connect(hostId);
@@ -2667,8 +2666,7 @@ async function doAuth(){
 
 function becomeHost(hostId) {
   S.peer.destroy();
-  const pConf = { config: { 'iceServers': [ { urls: 'stun:stun.l.google.com:19302' }, { urls: 'stun:stun1.l.google.com:19302' } ] } };
-  S.peer = new Peer(hostId, pConf);
+  S.peer = new Peer(hostId);
   S.peer.on('open', id => {
     S.isHost = true;
     document.getElementById('p2p-stat').textContent = "(Waiting for partner...)";
