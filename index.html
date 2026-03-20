@@ -1576,25 +1576,6 @@
       border-radius: 6px;
       border: 1px solid #ddd
     }
-  
-    /* Fullscreen Mode */
-    body.fs-mode .nav, 
-    body.fs-mode #hero, 
-    body.fs-mode #lgen, 
-    body.fs-mode #smem, 
-    body.fs-mode .sepdiv, 
-    body.fs-mode .footer,
-    body.fs-mode #priv .sechd { display: none !important; }
-    
-    body.fs-mode { background: var(--bg); overflow: hidden; padding: 0; margin: 0; }
-    body.fs-mode .app { padding: 0; max-width: 100%; }
-    body.fs-mode .pw { max-width: 100%; margin: 0; }
-    body.fs-mode #priv { padding-top: 0; margin-top: 0; min-height: 100vh; display: flex; flex-direction: column; padding: 0; }
-    body.fs-mode .cs { height: 100vh; border-radius: 0; border: none; display: flex; flex-direction: column; box-shadow: none; margin: 0; padding: 10px; }
-    body.fs-mode .msgs { flex: 1; height: auto; max-height: none; border-radius: 0; }
-    
-    .mdel { font-size: 13px; cursor: pointer; opacity: 0.6; padding: 2px 4px; border-radius: 4px; transition: 0.2s; }
-    .mdel:hover { opacity: 1; background: rgba(255,0,0,0.1); }
   </style>
   <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
 </head>
@@ -1809,17 +1790,16 @@
         <div id="lview">
           <div class="lc">
             <div class="li">🔐</div>
-            <h3 id="auth-title">Enter Our Space</h3>
-            <p id="auth-desc" style="color:var(--mu);font-size:13px;margin-bottom:20px;">Login to your space or create a new ID.</p>
-            <div style="display:flex;gap:10px;justify-content:center;margin-bottom:16px;">
-               <button class="btn btns" id="tab-login" onclick="setAuthTab('login')" style="border-color:var(--r);color:var(--r);background:var(--rl)">Login</button>
-               <button class="btn btns" id="tab-signup" onclick="setAuthTab('signup')">Create ID</button>
-            </div>
+            <h3>Enter Our Space</h3>
+            <p>This space is only for two people.<br>Enter your secret passphrase.</p>
             <div id="lalert"></div>
-                        <div class="ig"><label>Unique ID</label><input type="text" class="ii" id="lid" placeholder="Enter ID..." /></div>
+            <div class="ig"><label>Your Name</label><input type="text" class="ii" id="lname" placeholder="Akakan..." />
+            </div>
             <div class="ig"><label>Secret Passphrase</label><input type="password" class="ii" id="lpass"
-                placeholder="Enter passphrase..." onkeypress="if(event.key==='Enter')doAuth()" /></div>
-            <button class="btn btnp" id="auth-btn" style="width:100%;justify-content:center;margin-top:6px" onclick="doAuth()">💕 Login</button>
+                placeholder="Enter passphrase..." onkeypress="if(event.key==='Enter')doLogin()" /></div>
+            <button class="btn btnp" style="width:100%;justify-content:center;margin-top:6px" onclick="doLogin()">💕
+              Enter Our Space</button>
+            <p style="font-size:11px;color:var(--mu);margin-top:10px">Hint: passphrase is "loveyou"</p>
           </div>
         </div>
         <div id="cview" style="display:none">
@@ -1829,13 +1809,11 @@
                 <div style="font-family:'Playfair Display',serif;font-size:19px">💕 Our Space <span id="p2p-stat"
                     style="font-size:12px;color:var(--mu)">(Connecting...)</span></div>
                 <div style="font-size:11px;color:var(--mu)">Only you two can see this</div>
-                <div id="room-creds" style="font-size:11.5px;color:var(--r);font-weight:bold;margin-top:6px;display:none;"></div>
               </div>
               <div style="display:flex;gap:8px">
                 <button class="btn btns" onclick="openGames()" id="btn-games"
                   style="font-size:12px;padding:7px 14px;border-color:var(--r);color:var(--r);display:none">🎲
                   Games</button>
-                <button class="btn btns" id="btn-del-acct" onclick="deleteAccount()" style="font-size:12px;padding:7px 14px;border-color:#ff4d4d;color:#ff4d4d;display:none;">🗑️ Delete</button>
                 <button class="btn btns" onclick="doLogout()" style="font-size:12px;padding:7px 14px">🚪 Leave</button>
               </div>
             </div>
@@ -1964,28 +1942,8 @@
       </div>
     </div>
 
-    
-    <!-- DEL MODAL -->
-    <div class="modc" id="dmod">
-      <div class="modb" style="width:280px;text-align:center;padding:24px">
-        <div style="font-family:'Playfair Display',serif;font-size:20px;margin-bottom:16px;color:var(--rd)">Delete Message</div>
-        <button class="btn btnp" style="width:100%;margin-bottom:10px;background:var(--r);border:none" onclick="delExe(true)">🗑️ Delete for Everyone</button>
-        <button class="btn btns" style="width:100%;margin-bottom:10px;border-color:var(--rd);color:var(--rd)" onclick="delExe(false)">🗑️ Delete for Me</button>
-        <button class="btn btns" style="width:100%;border:none" onclick="document.getElementById('dmod').classList.remove('on')">Cancel</button>
-      </div>
-    </div>
-
-    <!-- NAME MODAL -->
-    <div class="modc" id="nmod">
-      <div class="modb" style="width:300px;text-align:center;padding:30px">
-        <div style="font-family:'Playfair Display',serif;font-size:22px;margin-bottom:10px;color:var(--rd)">💕 Connected!</div>
-        <p style="font-size:13px;color:var(--mu);margin-bottom:20px">Please enter your name to join the chat.</p>
-        <input type="text" class="ii" id="cname" placeholder="Your Name..." style="margin-bottom:16px;width:100%" onkeypress="if(event.key==='Enter')joinChat()"/>
-        <button class="btn btnp" style="width:100%;justify-content:center" onclick="joinChat()">Start Chatting</button>
-      </div>
-    </div>
     <!-- Footer -->
-    <div class="footer" id="footer" style="text-align:center;padding:36px 16px 80px;color:var(--mu);font-size:13px">
+    <div style="text-align:center;padding:36px 16px 80px;color:var(--mu);font-size:13px">
       <div style="font-size:22px;margin-bottom:6px">💕</div>
       <p>Made with love · <span style="color:var(--r)">Kanhaiya</span></p>
     </div>
@@ -2592,74 +2550,43 @@
 
 // ═══════════ PRIVATE SPACE & P2P LOGIC ═══════════
 async function getSHA(str) {
-  // Use a completely uniform hash fallback so all devices perfectly match
-  return btoa(unescape(encodeURIComponent(str))).replace(/[^a-zA-Z0-9]/g, '').toLowerCase().substring(0, 24);
+  const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
 }
 
-function setAuthTab(t) {
-  S.authMode = t;
-  document.getElementById('tab-login').style.cssText = t === 'login' ? 'border-color:var(--r);color:var(--r);background:var(--rl)' : '';
-  document.getElementById('tab-signup').style.cssText = t === 'signup' ? 'border-color:var(--r);color:var(--r);background:var(--rl)' : '';
-  document.getElementById('auth-btn').innerHTML = t === 'login' ? '💕 Login' : '✨ Create ID';
-  document.getElementById('auth-title').innerText = t === 'login' ? 'Enter Our Space' : 'Create New ID';
-}
-
-function deleteAccount() {
-  if (confirm("Are you sure you want to delete your saved ID from this device?")) {
-    localStorage.removeItem('akakan_saved_account');
-    doLogout();
-    document.getElementById('lid').value = '';
-    document.getElementById('lpass').value = '';
-    showToast("Account deleted from device.");
-  }
-}
-
-function doAuth(){
-  const mode = S.authMode || 'login';
-  const idStr=document.getElementById('lid').value.trim();
-  const pass=document.getElementById('lpass').value.trim();
+async function doLogin(){
+  const name=document.getElementById('lname').value.trim();
+  const pass=document.getElementById('lpass').value;
   const al=document.getElementById('lalert');
-  if(!idStr){al.innerHTML='<div class="ae">Unique ID required 💭</div>';return;}
+  if(!name){al.innerHTML='<div class="ae">Please enter your name 💭</div>';return;}
   if(!pass){al.innerHTML='<div class="ae">Passphrase required 🔒</div>';return;}
   
-  let isPreviouslyCreator = false;
-  try { isPreviouslyCreator = !!localStorage.getItem('akakan_saved_account'); } catch(e){}
-  const isCreatorMode = (mode === 'signup') || isPreviouslyCreator;
-  
-  if (mode === 'signup') {
-     try { localStorage.setItem('akakan_saved_account', JSON.stringify({ id: idStr, pass: pass })); } catch(e){}
-     showToast("Account Created & Saved!");
-  }
-  
-  if (isCreatorMode) {
-      document.getElementById('btn-del-acct').style.display = 'block';
-  } else {
-      document.getElementById('btn-del-acct').style.display = 'none';
-  }
-  
-  // Show Credentials on Chat Header
-  document.getElementById('room-creds').innerHTML = `ID: ${idStr} &nbsp;|&nbsp; Pass: ${pass}`;
-  document.getElementById('room-creds').style.display = 'block';
-  
-  S.loggedIn=false;
+  S.loggedIn=true;S.loginName=name;
   document.getElementById('lview').style.display='none';
   document.getElementById('cview').style.display='';
   
-  const cleanCreds = (idStr + pass).toLowerCase().replace(/[^a-z0-9]/g, '');
-  const hostId = 'akakan-' + cleanCreds + '-host';
+  const hash = await getSHA(pass);
+  const hostId = 'akakan-' + hash.substring(0, 16) + '-host';
   
-  S.msgs = [];
+  S.msgs = []; // clear old msgs
   renderMsgs();
   
-      const pConf = {
-    config: {
-      'iceServers': [
-        { url: 'stun:stun.l.google.com:19302', urls: 'stun:stun.l.google.com:19302' },
-        { url: 'stun:global.stun.twilio.com:3478?transport=udp', urls: 'stun:global.stun.twilio.com:3478?transport=udp' }
-      ]
-    }
-  };
-  S.peer = new Peer(hostId, pConf);
+  S.peer = new Peer();
+  S.peer.on('open', id => {
+    const conn = S.peer.connect(hostId);
+    conn.on('open', () => {
+      S.isHost = false;
+      setupConn(conn);
+    });
+  });
+  S.peer.on('error', err => {
+    if(err.type === 'peer-unavailable') becomeHost(hostId);
+  });
+}
+
+function becomeHost(hostId) {
+  S.peer.destroy();
+  S.peer = new Peer(hostId);
   S.peer.on('open', id => {
     S.isHost = true;
     document.getElementById('p2p-stat').textContent = "(Waiting for partner...)";
@@ -2670,59 +2597,22 @@ function doAuth(){
   });
 }
 
-function joinChat() {
-  const nm = document.getElementById('cname').value.trim();
-  if(!nm) return;
-  S.loginName = nm;
-  S.loggedIn = true;
-  document.getElementById('nmod').classList.remove('on');
-  
-  const savedAcc = localStorage.getItem('akakan_saved_account');
-  if (savedAcc) {
-     try {
-       const d = JSON.parse(savedAcc);
-       d.name = nm;
-       localStorage.setItem('akakan_saved_account', JSON.stringify(d));
-     } catch(e){}
-  }
-}
-
 function setupConn(conn) {
   S.conn = conn;
-  let savedAcc = null;
-  try { savedAcc = localStorage.getItem('akakan_saved_account'); } catch(e){}
-  if (savedAcc) {
-     try {
-       const d = JSON.parse(savedAcc);
-       if (d.name) {
-         S.loginName = d.name;
-         S.loggedIn = true;
-       }
-     } catch(e){}
-  }
-  if (!S.loginName) {
-     document.getElementById('nmod').classList.add('on');
-     setTimeout(()=>document.getElementById('cname').focus(), 100);
-  }
-
   document.getElementById('p2p-stat').textContent = "(Connected 💕)";
   document.getElementById('p2p-stat').style.color = 'var(--rd)';
   document.getElementById('btn-games').style.display = 'block';
-  document.body.classList.add('fs-mode');
   showToast("💕 Connected to partner!");
   
   conn.on('data', data => {
     if(data.type === 'chat') {
-      S.msgs.push({id:data.id, t:data.val, me:false, time:data.time, n:data.name});
+      S.msgs.push({t:data.val, me:false, time:data.time, n:data.name});
       renderMsgs();
     } else if(data.type === 'media') {
-      S.msgs.push({id:data.id, file:data.val, isVid:data.isVid, me:false, time:data.time, n:data.name});
+      S.msgs.push({file:data.val, isVid:data.isVid, me:false, time:data.time, n:data.name});
       renderMsgs();
     } else if(data.type === 'game') {
       handleGameSync(data);
-    } else if(data.type === 'chatAct' && data.act === 'del') {
-      S.msgs = S.msgs.filter(m => m.id !== data.id);
-      renderMsgs();
     }
   });
   
@@ -2732,7 +2622,6 @@ function setupConn(conn) {
     document.getElementById('p2p-stat').textContent = "(Disconnected)";
     document.getElementById('p2p-stat').style.color = 'var(--mu)';
     document.getElementById('btn-games').style.display = 'none';
-    document.body.classList.remove('fs-mode');
   });
 }
 
@@ -2744,7 +2633,6 @@ function doLogout(){
   document.getElementById('lpass').value='';
   document.getElementById('lalert').innerHTML='';
   document.getElementById('btn-games').style.display='none';
-  document.body.classList.remove('fs-mode');
   document.getElementById('p2p-stat').textContent = "(Connecting...)";
   document.getElementById('p2p-stat').style.color = 'var(--mu)';
 }
@@ -2755,10 +2643,7 @@ function renderMsgs(){
     <div class="bb ${m.me?'me':'th'}">
       ${!m.me && m.n ? `<div style="font-size:10px;font-weight:700;margin-bottom:2px;opacity:0.8">${m.n}</div>` : ''}
       ${m.file ? (m.isVid ? `<video src="${m.file}" controls style="max-width:100%;border-radius:8px;outline:none"></video>` : `<img src="${m.file}" style="max-width:100%;border-radius:8px">`) : m.t}
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:4px">
-        <div class="bt">${m.time}</div>
-        ${m.me ? `<div class="mdel" onclick="delPrompt('${m.id}')">🗑️</div>` : ''}
-      </div>
+      <div class="bt">${m.time}</div>
     </div>
   `).join('');
   area.scrollTop=area.scrollHeight;
@@ -2770,9 +2655,8 @@ function sendChat(){
   if(!txt)return;
   const now=new Date();
   const time=String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
-  const id=Date.now().toString(36)+Math.random().toString(36).slice(2);
-  S.msgs.push({id,t:txt,me:true,time});
-  if(S.conn) S.conn.send({type:'chat', id, val:txt, time, name:S.loginName});
+  S.msgs.push({t:txt,me:true,time});
+  if(S.conn) S.conn.send({type:'chat', val:txt, time, name:S.loginName});
   inp.value='';renderMsgs();
 }
 
@@ -2785,24 +2669,12 @@ function onAttSel() {
     const res = e.target.result;
     const now=new Date();
     const time=String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
-    const id=Date.now().toString(36)+Math.random().toString(36).slice(2);
-    S.msgs.push({id, file:res, isVid, me:true, time});
-    if(S.conn) S.conn.send({type:'media', id, val:res, isVid, time, name:S.loginName});
+    S.msgs.push({file:res, isVid, me:true, time});
+    if(S.conn) S.conn.send({type:'media', val:res, isVid, time, name:S.loginName});
     renderMsgs();
   };
   reader.readAsDataURL(f);
   document.getElementById('fatt').value='';
-}
-
-let dId = null;
-function delPrompt(id) { dId = id; document.getElementById('dmod').classList.add('on'); }
-function delExe(forAll) {
-  document.getElementById('dmod').classList.remove('on');
-  if(!dId) return;
-  S.msgs = S.msgs.filter(m => m.id !== dId);
-  renderMsgs();
-  if(forAll && S.conn) S.conn.send({type:'chatAct', act:'del', id:dId});
-  dId = null;
 }
 
 // ═══════════ GAMES LOGIC ═══════════
@@ -3048,22 +2920,7 @@ function resetSycLocal(){
     for (let i = 0; i < 4; i++)setTimeout(mkHeart, i * 500);
     // Init slider visual state
     ['br', 'co', 'sa'].forEach(k => updSliderBg(document.getElementById('sl-' + k)));
-    
-    // Auth Init
-    let savedAcc = null;
-    try { savedAcc = localStorage.getItem('akakan_saved_account'); } catch(e){}
-    if (savedAcc) {
-      try {
-        const d = JSON.parse(savedAcc);
-        document.getElementById('lid').value = d.id || '';
-        document.getElementById('lpass').value = d.pass || '';
-              } catch(e){}
-    }
   </script>
 </body>
 
 </html>
-
-
-
-
