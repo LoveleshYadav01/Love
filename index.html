@@ -2595,7 +2595,6 @@ async function getSHA(str) {
   // Use a completely uniform hash fallback so all devices perfectly match
   return btoa(unescape(encodeURIComponent(str))).replace(/[^a-zA-Z0-9]/g, '').toLowerCase().substring(0, 24);
 }
-}
 
 function setAuthTab(t) {
   S.authMode = t;
