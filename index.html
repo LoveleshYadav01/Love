@@ -2654,7 +2654,14 @@ function doAuth(){
   
   S.peer.on('open', id => {
     const conn = S.peer.connect(hostId);
+    const tm = setTimeout(() => {
+       if (!S.conn) {
+          alert("Connection is taking too long!\n\nPossible reasons:\n1. You are using Brave Browser on your phone (The Lion icon). Brave blocks WebRTC P2P connections to prevent IP leaks. Please turn off Brave Shields!\n2. Your Network Firewalls are blocking P2P.\n\nTry switching off Brave Shields or connecting both devices to the same WiFi network!");
+          document.getElementById('p2p-stat').textContent = "(Connection Failed ❌)";
+       }
+    }, 10000);
     conn.on('open', () => {
+      clearTimeout(tm);
       S.isHost = false;
       setupConn(conn);
     });
