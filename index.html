@@ -1829,12 +1829,13 @@
                 <div style="font-family:'Playfair Display',serif;font-size:19px">💕 Our Space <span id="p2p-stat"
                     style="font-size:12px;color:var(--mu)">(Connecting...)</span></div>
                 <div style="font-size:11px;color:var(--mu)">Only you two can see this</div>
+                <div id="room-creds" style="font-size:11.5px;color:var(--r);font-weight:bold;margin-top:6px;display:none;"></div>
               </div>
               <div style="display:flex;gap:8px">
                 <button class="btn btns" onclick="openGames()" id="btn-games"
                   style="font-size:12px;padding:7px 14px;border-color:var(--r);color:var(--r);display:none">🎲
                   Games</button>
-                <button class="btn btns" onclick="deleteAccount()" style="font-size:12px;padding:7px 14px;border-color:#ff4d4d;color:#ff4d4d">🗑️ Delete ID</button>
+                <button class="btn btns" id="btn-del-acct" onclick="deleteAccount()" style="font-size:12px;padding:7px 14px;border-color:#ff4d4d;color:#ff4d4d;display:none;">🗑️ Delete</button>
                 <button class="btn btns" onclick="doLogout()" style="font-size:12px;padding:7px 14px">🚪 Leave</button>
               </div>
             </div>
@@ -2591,13 +2592,9 @@
 
 // ═══════════ PRIVATE SPACE & P2P LOGIC ═══════════
 async function getSHA(str) {
-  if (crypto && crypto.subtle) {
-    const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(str));
-    return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
-  } else {
-    // Fallback for non-HTTPS local networks
-    return btoa(unescape(encodeURIComponent(str))).replace(/[^a-zA-Z0-9]/g, '').toLowerCase().substring(0, 16);
-  }
+  // Use a completely uniform hash fallback so all devices perfectly match
+  return btoa(unescape(encodeURIComponent(str))).replace(/[^a-zA-Z0-9]/g, '').toLowerCase().substring(0, 24);
+}
 }
 
 function setAuthTab(t) {
@@ -2621,28 +2618,42 @@ function deleteAccount() {
 async function doAuth(){
   const mode = S.authMode || 'login';
   const idStr=document.getElementById('lid').value.trim();
-  const pass=document.getElementById('lpass').value;
+  const pass=document.getElementById('lpass').value.trim();
   const al=document.getElementById('lalert');
   if(!idStr){al.innerHTML='<div class="ae">Unique ID required 💭</div>';return;}
   if(!pass){al.innerHTML='<div class="ae">Passphrase required 🔒</div>';return;}
   
+  const isPreviouslyCreator = !!localStorage.getItem('akakan_saved_account');
+  const isCreatorMode = (mode === 'signup') || isPreviouslyCreator;
+  
   if (mode === 'signup') {
-     // Name will be saved later when they join
      localStorage.setItem('akakan_saved_account', JSON.stringify({ id: idStr, pass: pass }));
      showToast("Account Created & Saved!");
   }
   
-  S.loggedIn=false; // Set logged in after name is provided
+  if (isCreatorMode) {
+      document.getElementById('btn-del-acct').style.display = 'block';
+  } else {
+      document.getElementById('btn-del-acct').style.display = 'none';
+  }
+  
+  // Show Credentials on Chat Header
+  document.getElementById('room-creds').innerHTML = `ID: ${idStr} &nbsp;|&nbsp; Pass: ${pass}`;
+  document.getElementById('room-creds').style.display = 'block';
+  
+  S.loggedIn=false;
   document.getElementById('lview').style.display='none';
   document.getElementById('cview').style.display='';
   
   const hash = await getSHA(idStr + pass);
-  const hostId = 'akakan-' + hash.substring(0, 16) + '-host';
+  const hostId = 'akakan-' + hash + '-host';
   
-  S.msgs = []; // clear old msgs
+  S.msgs = [];
   renderMsgs();
   
-  S.peer = new Peer();
+  const pConf = { config: { 'iceServers': [ { urls: 'stun:stun.l.google.com:19302' }, { urls: 'stun:stun1.l.google.com:19302' } ] } };
+  S.peer = new Peer(pConf);
+  
   S.peer.on('open', id => {
     const conn = S.peer.connect(hostId);
     conn.on('open', () => {
@@ -2657,14 +2668,16 @@ async function doAuth(){
 
 function becomeHost(hostId) {
   S.peer.destroy();
-  S.peer = new Peer(hostId);
+  const pConf = { config: { 'iceServers': [ { urls: 'stun:stun.l.google.com:19302' }, { urls: 'stun:stun1.l.google.com:19302' } ] } };
+  S.peer = new Peer(hostId, pConf);
   S.peer.on('open', id => {
     S.isHost = true;
     document.getElementById('p2p-stat').textContent = "(Waiting for partner...)";
   });
   S.peer.on('connection', conn => {
     if(S.conn) return; 
-    conn.on('open', () => setupConn(conn));
+    if (conn.open) setupConn(conn);
+    else conn.on('open', () => setupConn(conn));
   });
 }
 
