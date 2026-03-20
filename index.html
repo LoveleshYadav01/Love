@@ -1583,12 +1583,14 @@
     body.fs-mode #lgen, 
     body.fs-mode #smem, 
     body.fs-mode .sepdiv, 
-    body.fs-mode .footer { display: none !important; }
+    body.fs-mode .footer,
+    body.fs-mode #priv .sechd { display: none !important; }
     
     body.fs-mode { background: var(--bg); overflow: hidden; padding: 0; margin: 0; }
     body.fs-mode .app { padding: 0; max-width: 100%; }
-    body.fs-mode #priv { padding-top: 0; margin-top: 0; min-height: 100vh; display: flex; flex-direction: column; }
-    body.fs-mode .cs { height: 100vh; border-radius: 0; border: none; display: flex; flex-direction: column; box-shadow: none; margin: 0; }
+    body.fs-mode .pw { max-width: 100%; margin: 0; }
+    body.fs-mode #priv { padding-top: 0; margin-top: 0; min-height: 100vh; display: flex; flex-direction: column; padding: 0; }
+    body.fs-mode .cs { height: 100vh; border-radius: 0; border: none; display: flex; flex-direction: column; box-shadow: none; margin: 0; padding: 10px; }
     body.fs-mode .msgs { flex: 1; height: auto; max-height: none; border-radius: 0; }
     
     .mdel { font-size: 13px; cursor: pointer; opacity: 0.6; padding: 2px 4px; border-radius: 4px; transition: 0.2s; }
@@ -1807,16 +1809,18 @@
         <div id="lview">
           <div class="lc">
             <div class="li">🔐</div>
-            <h3>Enter Our Space</h3>
-            <p>This space is only for two people.<br>Enter your secret passphrase.</p>
-            <div id="lalert"></div>
-            <div class="ig"><label>Your Name</label><input type="text" class="ii" id="lname" placeholder="Akakan..." />
+            <h3 id="auth-title">Enter Our Space</h3>
+            <p id="auth-desc" style="color:var(--mu);font-size:13px;margin-bottom:20px;">Login to your space or create a new ID.</p>
+            <div style="display:flex;gap:10px;justify-content:center;margin-bottom:16px;">
+               <button class="btn btns" id="tab-login" onclick="setAuthTab('login')" style="border-color:var(--r);color:var(--r);background:var(--rl)">Login</button>
+               <button class="btn btns" id="tab-signup" onclick="setAuthTab('signup')">Create ID</button>
             </div>
+            <div id="lalert"></div>
+            <div class="ig"><label>Your Name</label><input type="text" class="ii" id="lname" placeholder="Your Name..." /></div>
+            <div class="ig"><label>Unique ID</label><input type="text" class="ii" id="lid" placeholder="Enter ID..." /></div>
             <div class="ig"><label>Secret Passphrase</label><input type="password" class="ii" id="lpass"
-                placeholder="Enter passphrase..." onkeypress="if(event.key==='Enter')doLogin()" /></div>
-            <button class="btn btnp" style="width:100%;justify-content:center;margin-top:6px" onclick="doLogin()">💕
-              Enter Our Space</button>
-            <p style="font-size:11px;color:var(--mu);margin-top:10px">Hint: passphrase is "loveyou"</p>
+                placeholder="Enter passphrase..." onkeypress="if(event.key==='Enter')doAuth()" /></div>
+            <button class="btn btnp" id="auth-btn" style="width:100%;justify-content:center;margin-top:6px" onclick="doAuth()">💕 Login</button>
           </div>
         </div>
         <div id="cview" style="display:none">
@@ -1831,6 +1835,7 @@
                 <button class="btn btns" onclick="openGames()" id="btn-games"
                   style="font-size:12px;padding:7px 14px;border-color:var(--r);color:var(--r);display:none">🎲
                   Games</button>
+                <button class="btn btns" onclick="deleteAccount()" style="font-size:12px;padding:7px 14px;border-color:#ff4d4d;color:#ff4d4d">🗑️ Delete ID</button>
                 <button class="btn btns" onclick="doLogout()" style="font-size:12px;padding:7px 14px">🚪 Leave</button>
               </div>
             </div>
@@ -2581,18 +2586,44 @@ async function getSHA(str) {
   return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
 }
 
-async function doLogin(){
+function setAuthTab(t) {
+  S.authMode = t;
+  document.getElementById('tab-login').style.cssText = t === 'login' ? 'border-color:var(--r);color:var(--r);background:var(--rl)' : '';
+  document.getElementById('tab-signup').style.cssText = t === 'signup' ? 'border-color:var(--r);color:var(--r);background:var(--rl)' : '';
+  document.getElementById('auth-btn').innerHTML = t === 'login' ? '💕 Login' : '✨ Create ID';
+  document.getElementById('auth-title').innerText = t === 'login' ? 'Enter Our Space' : 'Create New ID';
+}
+
+function deleteAccount() {
+  if (confirm("Are you sure you want to delete your saved ID from this device?")) {
+    localStorage.removeItem('akakan_saved_account');
+    doLogout();
+    document.getElementById('lid').value = '';
+    document.getElementById('lpass').value = '';
+    showToast("Account deleted from device.");
+  }
+}
+
+async function doAuth(){
+  const mode = S.authMode || 'login';
   const name=document.getElementById('lname').value.trim();
+  const idStr=document.getElementById('lid').value.trim();
   const pass=document.getElementById('lpass').value;
   const al=document.getElementById('lalert');
   if(!name){al.innerHTML='<div class="ae">Please enter your name 💭</div>';return;}
+  if(!idStr){al.innerHTML='<div class="ae">Unique ID required 💭</div>';return;}
   if(!pass){al.innerHTML='<div class="ae">Passphrase required 🔒</div>';return;}
+  
+  if (mode === 'signup') {
+     localStorage.setItem('akakan_saved_account', JSON.stringify({ id: idStr, pass: pass, name: name }));
+     showToast("Account Created & Saved!");
+  }
   
   S.loggedIn=true;S.loginName=name;
   document.getElementById('lview').style.display='none';
   document.getElementById('cview').style.display='';
   
-  const hash = await getSHA(pass);
+  const hash = await getSHA(idStr + pass);
   const hostId = 'akakan-' + hash.substring(0, 16) + '-host';
   
   S.msgs = []; // clear old msgs
@@ -2969,6 +3000,17 @@ function resetSycLocal(){
     for (let i = 0; i < 4; i++)setTimeout(mkHeart, i * 500);
     // Init slider visual state
     ['br', 'co', 'sa'].forEach(k => updSliderBg(document.getElementById('sl-' + k)));
+    
+    // Auth Init
+    const savedAcc = localStorage.getItem('akakan_saved_account');
+    if (savedAcc) {
+      try {
+        const d = JSON.parse(savedAcc);
+        document.getElementById('lid').value = d.id || '';
+        document.getElementById('lpass').value = d.pass || '';
+        document.getElementById('lname').value = d.name || '';
+      } catch(e){}
+    }
   </script>
 </body>
 
