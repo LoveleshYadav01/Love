@@ -1,0 +1,597 @@
+// ═══════════════════════════════════════
+    // 100 FRAME DEFINITIONS
+
+    // Format: {id,n(name),c(cat),bg(gradient),bd(border),fi(filter),ov(overlay)}
+    // ═══════════════════════════════════════
+    const F = [
+      // ─ MINIMAL (1-10) ─
+      { id: 1, n: "Pure White", c: "Minimal", bg: "#f8f8f8", bd: "3px solid rgba(255,255,255,.9)", fi: "", ov: "rgba(255,255,255,.08)" },
+      { id: 2, n: "Ink Black", c: "Minimal", bg: "#141414", bd: "3px solid #0a0a0a", fi: "", ov: "rgba(0,0,0,.1)" },
+      { id: 3, n: "Warm Cream", c: "Minimal", bg: "linear-gradient(160deg,#faf5ed,#f0e6d3)", bd: "10px solid #f0e0c8", fi: "sepia(.08) brightness(1.02)", ov: "rgba(255,240,210,.06)" },
+      { id: 4, n: "Soft Stone", c: "Minimal", bg: "linear-gradient(#e8e4de,#d8d0c8)", bd: "8px solid #d8d0c4", fi: "grayscale(.12) contrast(.97)", ov: "" },
+      { id: 5, n: "Linen", c: "Minimal", bg: "linear-gradient(#fdf8f2,#f5edd8)", bd: "14px solid #f4e8d2", fi: "sepia(.07) brightness(1.02)", ov: "" },
+      { id: 6, n: "Frosted", c: "Minimal", bg: "linear-gradient(135deg,#f8f8ff,#f0f0f8)", bd: "2px solid rgba(255,255,255,.6)", fi: "brightness(1.04)", ov: "rgba(255,255,255,.14)" },
+      { id: 7, n: "Ash", c: "Minimal", bg: "linear-gradient(#ccc9c2,#b8b4ac)", bd: "8px solid #b0aca4", fi: "grayscale(.28) contrast(1.04)", ov: "" },
+      { id: 8, n: "Snow", c: "Minimal", bg: "#ffffff", bd: "7px solid #f0f4ff", fi: "brightness(1.04) contrast(.96)", ov: "rgba(240,248,255,.08)" },
+      { id: 9, n: "Parchment", c: "Minimal", bg: "linear-gradient(#f5edd8,#ebe0c4)", bd: "11px solid #e8d8b4", fi: "sepia(.18) brightness(1.02)", ov: "" },
+      { id: 10, n: "Chrome", c: "Minimal", bg: "linear-gradient(135deg,#e8e8ed,#d0d0d8)", bd: "3px solid #c8c8d8", fi: "contrast(1.04) saturate(.88)", ov: "rgba(200,200,220,.08)" },
+      // ─ FLORAL (11-20) ─
+      { id: 11, n: "Rose Garden", c: "Floral", bg: "linear-gradient(135deg,#fce4ec,#f8bbd0,#fce4ec)", bd: "9px solid #f8bbd0", fi: "saturate(1.1) brightness(1.02)", ov: "rgba(248,187,208,.12)" },
+      { id: 12, n: "Cherry Blossom", c: "Floral", bg: "linear-gradient(160deg,#fce4ec,#fff9c4)", bd: "7px solid #fce4ec", fi: "saturate(1.04) brightness(1.03)", ov: "rgba(252,228,236,.16)" },
+      { id: 13, n: "Lavender", c: "Floral", bg: "linear-gradient(135deg,#ede7f6,#d1c4e9)", bd: "9px solid #e1bee7", fi: "saturate(.94) brightness(1.02)", ov: "rgba(225,190,231,.12)" },
+      { id: 14, n: "Gold Petals", c: "Floral", bg: "linear-gradient(135deg,#fff8e1,#ffecb3)", bd: "7px solid #fff8e1", fi: "saturate(1.1)", ov: "rgba(255,236,179,.12)" },
+      { id: 15, n: "Wildflower", c: "Floral", bg: "linear-gradient(135deg,#f1f8e9,#dcedc8,#f9fbe7)", bd: "9px solid #dcedc8", fi: "saturate(1.04)", ov: "rgba(220,237,200,.12)" },
+      { id: 16, n: "Forest Mist", c: "Floral", bg: "linear-gradient(135deg,#e0f2f1,#b2dfdb)", bd: "9px solid #e0f2f1", fi: "saturate(.88) brightness(1.02)", ov: "rgba(178,223,219,.12)" },
+      { id: 17, n: "Tropical", c: "Floral", bg: "linear-gradient(135deg,#e0f7fa,#b2ebf2,#e8f5e9)", bd: "7px solid #b2ebf2", fi: "saturate(1.14) brightness(1.02)", ov: "rgba(178,235,242,.08)" },
+      { id: 18, n: "Sunflower", c: "Floral", bg: "linear-gradient(135deg,#fff9c4,#fff176,#fffde7)", bd: "9px solid #fff9c4", fi: "saturate(1.18) brightness(1.04)", ov: "rgba(255,249,196,.16)" },
+      { id: 19, n: "Lotus Dream", c: "Floral", bg: "linear-gradient(135deg,#fce4ec,#e1bee7)", bd: "9px solid #f8bbd0", fi: "saturate(1.04) brightness(1.02)", ov: "rgba(225,190,231,.16)" },
+      { id: 20, n: "Spring Haze", c: "Floral", bg: "linear-gradient(135deg,#f8bbd0,#ce93d8,#f48fb1)", bd: "5px solid #f8bbd0", fi: "saturate(1.08)", ov: "rgba(248,187,208,.08)" },
+      // ─ DARK MOODY (21-30) ─
+      { id: 21, n: "Midnight", c: "Dark Moody", bg: "linear-gradient(135deg,#0d1b2a,#1b2838)", bd: "9px solid #0a1422", fi: "brightness(.94) contrast(1.1)", ov: "rgba(13,27,42,.28)" },
+      { id: 22, n: "Dark Romance", c: "Dark Moody", bg: "linear-gradient(135deg,#1a0a0f,#3d0c23)", bd: "9px solid #180810", fi: "brightness(.9) saturate(1.2) contrast(1.1)", ov: "rgba(60,0,30,.18)" },
+      { id: 23, n: "Shadow Play", c: "Dark Moody", bg: "linear-gradient(135deg,#1a1a2e,#16213e,#0f3460)", bd: "7px solid #141830", fi: "brightness(.9) contrast(1.14)", ov: "rgba(22,33,62,.22)" },
+      { id: 24, n: "Noir", c: "Dark Moody", bg: "#0a0a0a", bd: "11px solid #111", fi: "grayscale(.48) contrast(1.22) brightness(.9)", ov: "rgba(0,0,0,.22)" },
+      { id: 25, n: "Deep Ocean", c: "Dark Moody", bg: "linear-gradient(135deg,#0d1b2a,#0d3b6e,#0a2a5a)", bd: "9px solid #0d1b2a", fi: "brightness(.9) saturate(1.08) contrast(1.04)", ov: "rgba(13,27,42,.18)" },
+      { id: 26, n: "Smoky", c: "Dark Moody", bg: "linear-gradient(135deg,#2d2520,#4a3728)", bd: "9px solid #2a2018", fi: "sepia(.28) brightness(.86) contrast(1.1)", ov: "rgba(30,20,15,.22)" },
+      { id: 27, n: "Velvet Night", c: "Dark Moody", bg: "linear-gradient(135deg,#1a0a2e,#2d1b5e,#1a0a2e)", bd: "9px solid #180828", fi: "brightness(.9) saturate(1.18)", ov: "rgba(30,0,50,.18)" },
+      { id: 28, n: "Dark Forest", c: "Dark Moody", bg: "linear-gradient(135deg,#0a1f0a,#1a3320)", bd: "9px solid #0e1e0e", fi: "brightness(.87) saturate(.78) contrast(1.1)", ov: "rgba(0,20,0,.22)" },
+      { id: 29, n: "Blood Moon", c: "Dark Moody", bg: "linear-gradient(135deg,#1a0505,#3d0c0c,#1a0505)", bd: "9px solid #1a0505", fi: "brightness(.87) saturate(1.28) contrast(1.1)", ov: "rgba(40,0,0,.18)" },
+      { id: 30, n: "Eclipse", c: "Dark Moody", bg: "radial-gradient(circle at 50% 30%,#2a1500 0%,#0a0a0a 70%)", bd: "9px solid #0a0a0a", fi: "brightness(.84) contrast(1.2) sepia(.18)", ov: "rgba(0,0,0,.28)" },
+      // ─ VINTAGE (31-40) ─
+      { id: 31, n: "Kodak", c: "Vintage", bg: "linear-gradient(135deg,#f5e6d0,#e8d0b0)", bd: "7px solid #f0dfc0", fi: "sepia(.2) saturate(1.28) contrast(1.04) brightness(1.04)", ov: "rgba(240,210,160,.08)" },
+      { id: 32, n: "Polaroid", c: "Vintage", bg: "#ffffff", bd: "10px 10px 38px 10px solid #f8f8f8", fi: "contrast(.9) saturate(.88) brightness(1.04) sepia(.08)", ov: "" },
+      { id: 33, n: "Faded Film", c: "Vintage", bg: "linear-gradient(135deg,#f0ead8,#e8e0c8)", bd: "5px solid #e8e0c8", fi: "contrast(.82) brightness(1.08) sepia(.22) saturate(.84)", ov: "rgba(240,225,190,.08)" },
+      { id: 34, n: "VHS", c: "Vintage", bg: "linear-gradient(135deg,#0a1428,#1a2840)", bd: "3px solid #1a2840", fi: "saturate(1.5) contrast(1.14) brightness(.94)", ov: "rgba(0,200,255,.04)" },
+      { id: 35, n: "70s Sunset", c: "Vintage", bg: "linear-gradient(135deg,#f5deb3,#e8a878,#d4906a)", bd: "7px solid #f0c898", fi: "sepia(.28) saturate(1.38) contrast(1.04) brightness(1.02)", ov: "rgba(240,180,120,.08)" },
+      { id: 36, n: "Lomography", c: "Vintage", bg: "linear-gradient(135deg,#c8d8a0,#a0b878)", bd: "5px solid #b0c888", fi: "contrast(1.28) saturate(1.48) brightness(.94)", ov: "radial-gradient(ellipse at center,transparent 42%,rgba(0,0,0,.38) 100%)" },
+      { id: 37, n: "Hollywood", c: "Vintage", bg: "linear-gradient(135deg,#c8c0b0,#a8a090)", bd: "7px solid #b8b0a0", fi: "grayscale(.58) contrast(1.18) brightness(.94)", ov: "" },
+      { id: 38, n: "Sepia", c: "Vintage", bg: "linear-gradient(135deg,#d4b896,#c09060)", bd: "7px solid #c8a878", fi: "sepia(.58) contrast(1.04)", ov: "rgba(180,130,80,.07)" },
+      { id: 39, n: "Film Noir", c: "Vintage", bg: "linear-gradient(135deg,#202020,#383838)", bd: "9px solid #1a1a1a", fi: "grayscale(.88) contrast(1.28) brightness(.92)", ov: "radial-gradient(ellipse at center,transparent 48%,rgba(0,0,0,.48) 100%)" },
+      { id: 40, n: "Grain Rush", c: "Vintage", bg: "linear-gradient(135deg,#d8c8b0,#c8b898)", bd: "5px solid #d0c0a8", fi: "saturate(1.08) contrast(1.04) brightness(1.02) sepia(.14)", ov: "rgba(200,180,150,.04)" },
+      // ─ NEON (41-50) ─
+      { id: 41, n: "Neon Nights", c: "Neon", bg: "linear-gradient(135deg,#0a0a0a,#1a0028)", bd: "2px solid #ff00aa", fi: "brightness(1.08) contrast(1.08) saturate(1.28)", ov: "rgba(255,0,170,.07)" },
+      { id: 42, n: "Electric Blue", c: "Neon", bg: "linear-gradient(135deg,#0a0a1f,#000a28)", bd: "2px solid #0040ff", fi: "brightness(1.08) contrast(1.04) saturate(1.18)", ov: "rgba(0,80,255,.07)" },
+      { id: 43, n: "Hot Pink", c: "Neon", bg: "linear-gradient(135deg,#1a0014,#280028)", bd: "2px solid #ff0066", fi: "brightness(1.07) saturate(1.28)", ov: "rgba(255,0,100,.09)" },
+      { id: 44, n: "Cyber Purple", c: "Neon", bg: "linear-gradient(135deg,#0d0a1f,#1a0a38)", bd: "2px solid #6600cc", fi: "brightness(1.04) contrast(1.08) saturate(1.18)", ov: "rgba(100,0,200,.07)" },
+      { id: 45, n: "Aurora", c: "Neon", bg: "linear-gradient(135deg,#001a00,#0a1a3d,#1a003d)", bd: "2px solid #00cc66", fi: "brightness(1.04) saturate(1.18) contrast(1.04)", ov: "rgba(0,200,100,.05)" },
+      { id: 46, n: "Rainbow", c: "Neon", bg: "linear-gradient(135deg,#ff0080,#ff8000,#ffff00,#00ff80,#0080ff,#8000ff)", bd: "3px solid transparent", fi: "brightness(1.04) saturate(1.18)", ov: "rgba(255,255,255,.04)" },
+      { id: 47, n: "UV Party", c: "Neon", bg: "linear-gradient(135deg,#0a0014,#14002a,#0a0014)", bd: "2px solid #9900cc", fi: "brightness(1.08) contrast(1.08) saturate(1.38)", ov: "rgba(150,0,200,.07)" },
+      { id: 48, n: "Laser", c: "Neon", bg: "linear-gradient(135deg,#001414,#001a1a)", bd: "2px solid #00cccc", fi: "brightness(1.04) saturate(1.18) contrast(1.07)", ov: "rgba(0,200,200,.07)" },
+      { id: 49, n: "Matrix", c: "Neon", bg: "linear-gradient(135deg,#0a1a0a,#001400)", bd: "2px solid #00cc00", fi: "brightness(1.0) saturate(.78) contrast(1.08)", ov: "rgba(0,200,0,.07)" },
+      { id: 50, n: "Neon Rose", c: "Neon", bg: "linear-gradient(135deg,#14000a,#280014)", bd: "2px solid #ff2266", fi: "brightness(1.07) saturate(1.28) contrast(1.04)", ov: "rgba(255,50,100,.07)" },
+      // ─ PASTEL (51-60) ─
+      { id: 51, n: "Baby Pink", c: "Pastel", bg: "linear-gradient(135deg,#fff0f5,#ffe4ef)", bd: "11px solid #ffe4ef", fi: "saturate(.88) brightness(1.03)", ov: "rgba(255,200,220,.09)" },
+      { id: 52, n: "Sky Blue", c: "Pastel", bg: "linear-gradient(135deg,#f0f8ff,#daeeff)", bd: "11px solid #daeeff", fi: "saturate(.87) brightness(1.03)", ov: "rgba(200,230,255,.09)" },
+      { id: 53, n: "Mint", c: "Pastel", bg: "linear-gradient(135deg,#f0fff8,#d8f8ec)", bd: "11px solid #d8f8ec", fi: "saturate(.87) brightness(1.03)", ov: "rgba(200,240,220,.09)" },
+      { id: 54, n: "Lilac", c: "Pastel", bg: "linear-gradient(135deg,#f8f0ff,#ecdaff)", bd: "11px solid #ecdaff", fi: "saturate(.87) brightness(1.02)", ov: "rgba(220,200,240,.09)" },
+      { id: 55, n: "Peach", c: "Pastel", bg: "linear-gradient(135deg,#fff5f0,#ffeae0)", bd: "11px solid #ffeae0", fi: "saturate(.89) brightness(1.03)", ov: "rgba(255,220,200,.09)" },
+      { id: 56, n: "Lemon", c: "Pastel", bg: "linear-gradient(135deg,#fffdf0,#fffbd8)", bd: "11px solid #fffbd8", fi: "saturate(.87) brightness(1.04)", ov: "rgba(255,250,200,.09)" },
+      { id: 57, n: "Cotton Candy", c: "Pastel", bg: "linear-gradient(135deg,#ffe4f3,#e4e4ff)", bd: "11px solid #f0d0f0", fi: "saturate(.89) brightness(1.02)", ov: "rgba(240,210,240,.09)" },
+      { id: 58, n: "Morning Dew", c: "Pastel", bg: "linear-gradient(135deg,#f0fff8,#f8f0ff)", bd: "11px solid #e8f4f8", fi: "saturate(.84) brightness(1.04)", ov: "rgba(220,240,245,.09)" },
+      { id: 59, n: "Blush", c: "Pastel", bg: "linear-gradient(135deg,#fce4ec,#ede7f6)", bd: "11px solid #fce4ec", fi: "saturate(.92) brightness(1.02)", ov: "rgba(240,210,230,.09)" },
+      { id: 60, n: "Powder", c: "Pastel", bg: "linear-gradient(135deg,#ffccdd,#e8c4e8)", bd: "9px solid #f0c8e8", fi: "saturate(.87) brightness(1.02)", ov: "rgba(240,200,230,.09)" },
+      // ─ LUXURY (61-70) ─
+      { id: 61, n: "24K Gold", c: "Luxury", bg: "linear-gradient(135deg,#1a1200,#3d2d00,#1a1200)", bd: "2.5px solid #d4af37", fi: "brightness(1.04) contrast(1.04)", ov: "rgba(212,175,55,.05)" },
+      { id: 62, n: "Rose Gold", c: "Luxury", bg: "linear-gradient(135deg,#2d1018,#4a2030)", bd: "2.5px solid #c0785a", fi: "brightness(1.02) saturate(1.08)", ov: "rgba(192,120,90,.05)" },
+      { id: 63, n: "Champagne", c: "Luxury", bg: "linear-gradient(135deg,#f5ead0,#e8d4a8)", bd: "3.5px solid #d4b870", fi: "brightness(1.04) sepia(.09) saturate(1.04)", ov: "rgba(220,200,150,.07)" },
+      { id: 64, n: "Gold Foil", c: "Luxury", bg: "linear-gradient(135deg,#3d3000,#1a1500,#3d3000)", bd: "2px solid #f0c040", fi: "brightness(1.02) contrast(1.04)", ov: "rgba(240,192,64,.04)" },
+      { id: 65, n: "Marble Gold", c: "Luxury", bg: "linear-gradient(135deg,#f5f5f0,#ece8e0,#f0ece4)", bd: "3.5px solid #d4b870", fi: "brightness(1.02) contrast(.98)", ov: "rgba(212,184,112,.05)" },
+      { id: 66, n: "Royal", c: "Luxury", bg: "linear-gradient(135deg,#0a0820,#1a1440,#0a0820)", bd: "2.5px solid #d4af37", fi: "brightness(.94) contrast(1.08)", ov: "rgba(200,160,48,.05)" },
+      { id: 67, n: "Diamond", c: "Luxury", bg: "linear-gradient(135deg,#e8f0f8,#d8e8f8,#e0ecf8)", bd: "2.5px solid #a8c8e8", fi: "brightness(1.04) contrast(.98) saturate(.88)", ov: "rgba(200,230,255,.07)" },
+      { id: 68, n: "Platinum", c: "Luxury", bg: "linear-gradient(135deg,#d8d8e0,#c8c8d8,#d0d0dc)", bd: "2.5px solid #a0a0b8", fi: "brightness(1.02) saturate(.78) contrast(1.02)", ov: "rgba(180,180,200,.05)" },
+      { id: 69, n: "Bronze", c: "Luxury", bg: "linear-gradient(135deg,#2a1800,#4a3010,#2a1800)", bd: "2.5px solid #c87c20", fi: "brightness(1.02) sepia(.18) contrast(1.04)", ov: "rgba(200,120,32,.05)" },
+      { id: 70, n: "Gold Dust", c: "Luxury", bg: "linear-gradient(135deg,#18100a,#302010)", bd: "1.5px solid #a08840", fi: "brightness(1.04) contrast(1.04)", ov: "rgba(160,136,64,.04)" },
+      // ─ SEASONAL (71-80) ─
+      { id: 71, n: "Winter Frost", c: "Seasonal", bg: "linear-gradient(135deg,#e8f4f8,#d0eaf8,#e0f0f8)", bd: "9px solid #e0f0f8", fi: "brightness(1.04) saturate(.84) contrast(1.02)", ov: "rgba(220,240,255,.09)" },
+      { id: 72, n: "Spring Bloom", c: "Seasonal", bg: "linear-gradient(135deg,#f0f8e0,#e8f4d8,#d8f0e8)", bd: "9px solid #e0f4d0", fi: "brightness(1.04) saturate(1.08)", ov: "rgba(210,240,190,.09)" },
+      { id: 73, n: "Summer Vibes", c: "Seasonal", bg: "linear-gradient(135deg,#fff8d0,#ffe890,#ffd060)", bd: "7px solid #fff0b0", fi: "brightness(1.04) saturate(1.14) contrast(1.02)", ov: "rgba(255,230,150,.09)" },
+      { id: 74, n: "Autumn", c: "Seasonal", bg: "linear-gradient(135deg,#f0c878,#e89040,#d06020)", bd: "9px solid #e8a050", fi: "saturate(1.18) contrast(1.04) sepia(.14) brightness(1.02)", ov: "rgba(230,140,60,.09)" },
+      { id: 75, n: "Christmas", c: "Seasonal", bg: "linear-gradient(135deg,#c01010,#8a0010,#1a4020)", bd: "2.5px solid #e03020", fi: "brightness(.94) saturate(1.18) contrast(1.04)", ov: "rgba(20,60,20,.09)" },
+      { id: 76, n: "Valentine", c: "Seasonal", bg: "linear-gradient(135deg,#ff4060,#ff8090,#ff4060)", bd: "3.5px solid #cc0030", fi: "saturate(1.14) brightness(1.02) contrast(1.04)", ov: "rgba(255,50,80,.07)" },
+      { id: 77, n: "Halloween", c: "Seasonal", bg: "linear-gradient(135deg,#1a0a00,#3a1a00)", bd: "3.5px solid #f06000", fi: "brightness(.9) contrast(1.18) sepia(.09)", ov: "rgba(60,20,0,.18)" },
+      { id: 78, n: "New Year", c: "Seasonal", bg: "linear-gradient(135deg,#0a0820,#1a1440,#0a0820)", bd: "2.5px solid #d4af37", fi: "brightness(.94) contrast(1.08)", ov: "rgba(212,175,55,.05)" },
+      { id: 79, n: "Monsoon", c: "Seasonal", bg: "linear-gradient(135deg,#2a3848,#384858,#2a3848)", bd: "7px solid #384858", fi: "brightness(.9) saturate(.74) contrast(1.04)", ov: "rgba(80,120,180,.09)" },
+      { id: 80, n: "Diwali", c: "Seasonal", bg: "linear-gradient(135deg,#3d2000,#7a4800,#3d2000)", bd: "2.5px solid #f0a800", fi: "brightness(1.02) saturate(1.28) contrast(1.04)", ov: "rgba(240,168,0,.05)" },
+      // ─ AESTHETIC/VSCO (81-90) ─
+      { id: 81, n: "VSCO A4", c: "Aesthetic", bg: "linear-gradient(135deg,#f8f0e8,#f0e4d4)", bd: "5px solid #f0e0c8", fi: "sepia(.14) saturate(1.24) contrast(1.04) brightness(1.07)", ov: "rgba(240,210,170,.07)" },
+      { id: 82, n: "A6 Warm", c: "Aesthetic", bg: "linear-gradient(135deg,#f8e8d0,#f0d8b8)", bd: "5px solid #f0d8b8", fi: "sepia(.18) saturate(1.34) contrast(1.02) brightness(1.09)", ov: "rgba(250,200,140,.07)" },
+      { id: 83, n: "C1 Cool", c: "Aesthetic", bg: "linear-gradient(135deg,#e8f0f8,#d8e8f4)", bd: "5px solid #d8e8f4", fi: "saturate(.89) contrast(1.04) brightness(1.02)", ov: "rgba(200,220,240,.07)" },
+      { id: 84, n: "HB2 Dark", c: "Aesthetic", bg: "linear-gradient(135deg,#181818,#242424)", bd: "7px solid #1c1c1c", fi: "brightness(.9) contrast(1.28) saturate(.88)", ov: "radial-gradient(ellipse at center,transparent 44%,rgba(0,0,0,.44) 100%)" },
+      { id: 85, n: "M5 Matte", c: "Aesthetic", bg: "linear-gradient(135deg,#e8e0d8,#d8d0c8)", bd: "5px solid #ddd5c8", fi: "contrast(.88) saturate(.74) brightness(1.04)", ov: "rgba(200,190,180,.07)" },
+      { id: 86, n: "Fade Out", c: "Aesthetic", bg: "linear-gradient(135deg,#f8f0e8,#ece4d8)", bd: "5px solid #ede4d4", fi: "contrast(.78) saturate(.64) brightness(1.14)", ov: "rgba(255,248,235,.1)" },
+      { id: 87, n: "Warm Haze", c: "Aesthetic", bg: "linear-gradient(135deg,#f8d0a0,#f0c080)", bd: "7px solid #f0c080", fi: "sepia(.24) saturate(1.28) contrast(1.02) brightness(1.04)", ov: "rgba(240,180,100,.1)" },
+      { id: 88, n: "Cool Tone", c: "Aesthetic", bg: "linear-gradient(135deg,#c8d8e8,#b8c8d8)", bd: "7px solid #c0d0e0", fi: "saturate(.72) contrast(1.04) brightness(1.02)", ov: "rgba(180,200,220,.07)" },
+      { id: 89, n: "Matte Black", c: "Aesthetic", bg: "#141414", bd: "9px solid #141414", fi: "brightness(.87) contrast(1.24) saturate(.68)", ov: "rgba(0,0,0,.18)" },
+      { id: 90, n: "Dust & Grain", c: "Aesthetic", bg: "linear-gradient(135deg,#d8c8a8,#c8b898)", bd: "7px solid #c8b898", fi: "sepia(.17) contrast(1.07) saturate(.94) brightness(1.02)", ov: "rgba(180,160,120,.05)" },
+      // ─ ROMANCE (91-100) ─
+      { id: 91, n: "Red Roses", c: "Romance", bg: "linear-gradient(135deg,#8a0010,#c01020,#8a0010)", bd: "3.5px solid #cc1828", fi: "saturate(1.18) contrast(1.04) brightness(.96)", ov: "rgba(180,0,20,.1)" },
+      { id: 92, n: "Heart Flutter", c: "Romance", bg: "linear-gradient(135deg,#fce4ec,#f8a8c0,#fce4ec)", bd: "7px solid #fce4ec", fi: "saturate(1.07) brightness(1.02)", ov: "rgba(248,168,192,.09)" },
+      { id: 93, n: "Love Letter", c: "Romance", bg: "linear-gradient(#faf6ef,#f5edd8)", bd: "11px solid #f5edd8", fi: "sepia(.14) brightness(1.03) contrast(.97)", ov: "rgba(240,220,180,.07)" },
+      { id: 94, n: "Cupid", c: "Romance", bg: "linear-gradient(135deg,#ffdde8,#ffccd8)", bd: "9px solid #ffdde8", fi: "saturate(1.04) brightness(1.04)", ov: "rgba(255,210,225,.09)" },
+      { id: 95, n: "Rosy Haze", c: "Romance", bg: "linear-gradient(135deg,#f0d0e8,#d8b0d8,#e8c8e8)", bd: "7px solid #e8c8e8", fi: "saturate(1.04) brightness(1.02)", ov: "rgba(220,175,220,.1)" },
+      { id: 96, n: "Pink Confetti", c: "Romance", bg: "linear-gradient(135deg,#ffe0f0,#ffc8e8,#ffd8f0)", bd: "7px solid #ffd8f0", fi: "saturate(1.07) brightness(1.03)", ov: "rgba(255,200,230,.07)" },
+      { id: 97, n: "Starry Night", c: "Romance", bg: "linear-gradient(135deg,#0a0a28,#1a1050)", bd: "7px solid #0a0a28", fi: "brightness(.92) contrast(1.08) saturate(1.08)", ov: "rgba(30,20,80,.18)" },
+      { id: 98, n: "Moonlit", c: "Romance", bg: "linear-gradient(135deg,#1a2040,#2a3060)", bd: "7px solid #1a2040", fi: "brightness(.9) contrast(1.07) saturate(.88)", ov: "rgba(100,130,200,.09)" },
+      { id: 99, n: "Forever", c: "Romance", bg: "linear-gradient(135deg,#2d1018,#4a2030)", bd: "2.5px solid #b07080", fi: "brightness(.97) saturate(1.08) contrast(1.04)", ov: "rgba(190,110,130,.07)" },
+      { id: 100, n: "Our Story", c: "Romance", bg: "linear-gradient(135deg,#f5e0c8,#e8c8a8,#f0d8b8)", bd: "7px solid #f0d8b8", fi: "sepia(.22) saturate(1.14) brightness(1.04) contrast(1.02)", ov: "rgba(230,190,140,.09)" },
+    ];
+
+    // ═══════════ STATE ═══════════
+    const S = {
+      frame: 1,
+      hasImg: false,
+      texts: [],   // {text,pos,color,size,px}
+      stickers: [], // {emoji,x,y}
+      vig: false,
+      textPos: 'top',
+      textColor: '#ffffff',
+      textPx: 14,
+      textSz: 'S',
+      cat: 'All',
+      msgTab: 'pickup',
+      genMsg: '',
+      isGen: false,
+      musicOn: false
+    };
+
+    // ═══════════ HEARTS ═══════════
+    const HEMS = ['💕', '💖', '💗', '💝', '♥', '🌸', '✨'];
+    function mkHeart() {
+      const h = document.createElement('div');
+      h.className = 'hf';
+      h.textContent = HEMS[~~(Math.random() * HEMS.length)];
+      h.style.cssText = `left:${Math.random() * 100}vw;animation-duration:${Math.random() * 8 + 6}s;animation-delay:${Math.random() * 3}s;font-size:${Math.random() * 10 + 7}px`;
+      document.getElementById('hc').appendChild(h);
+      setTimeout(() => h.remove(), 14000);
+    }
+    setInterval(mkHeart, 2400);
+
+    // ═══════════ HEART BURST ═══════════
+    function burst(e) {
+      const el = document.createElement('div');
+      el.className = 'hbst'; el.textContent = '💖';
+      el.style.cssText = `left:${e.clientX}px;top:${e.clientY}px`;
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 900);
+    }
+    document.addEventListener('click', e => { if (Math.random() < .12) burst(e) });
+
+    // ═══════════ TOAST ═══════════
+    function showToast(m, d = 2200) {
+      const t = document.getElementById('toast');
+      t.textContent = m; t.classList.add('sh');
+      setTimeout(() => t.classList.remove('sh'), d);
+    }
+
+    // ═══════════ NAV ═══════════
+    function goTo(id) { document.getElementById(id).scrollIntoView({ behavior: 'smooth', block: 'start' }) }
+    window.addEventListener('scroll', () => {
+      const h = document.documentElement.scrollHeight - window.innerHeight;
+      document.getElementById('prog').style.width = (scrollY / h * 100) + '%';
+    });
+
+    // ═══════════ LOVE GENERATOR ═══════════
+    const MSGS = {
+      pickup: [
+        "Are you a magnet? Because I keep finding myself drawn to you no matter where I go.",
+        "If kisses were stars I'd give you the entire galaxy.",
+        "They say nothing lasts forever… so will you be my nothing?",
+        "Do you believe in love at first sight or should I walk by again?",
+        "If you were a song you'd be the one I play on repeat forever.",
+        "Your smile is a black hole — nothing can escape its pull.",
+        "I must be a snowflake because I've fallen for you.",
+        "Are you made of copper and tellurium? Because you're absolutely CuTe.",
+        "If beauty were time you'd be an eternity.",
+        "Every time I see you my heart forgets how to beat normally."
+      ],
+      romantic: [
+        "In every lifetime across every world I would find you. That's how certain I am about you.",
+        "You are the poem I never knew how to write and the song that has always been in my heart.",
+        "Home is not a place. It's you — your arms your eyes your laugh.",
+        "I love you not because of who you are but because of who I become when I'm with you.",
+        "Every single day with you feels like the most beautiful dream I never want to wake from.",
+        "You walked into my life so quietly yet you made the loudest impact on my heart.",
+        "I want to grow old with you — not because I have to but because there's no one else I'd choose.",
+        "The world is softer warmer and infinitely more beautiful with you in it.",
+        "Loving you is the easiest and most natural thing I have ever done.",
+        "If I could have one wish I'd wish to relive every moment I've shared with you."
+      ],
+      hot: [
+        "I've been thinking about you all day… and I can't stop smiling. You do things to me 🔥",
+        "Every text from you makes my heart race a little faster. I love that feeling.",
+        "I want to be the reason you can't sleep tonight — and the first thing you think of in the morning.",
+        "You make my heart do things it was never trained for. You're dangerous 😏",
+        "I keep replaying our last moment together… want to give me something new to think about?",
+        "There's something incredibly attractive about the way you make me laugh. It's not fair 🔥",
+        "I'd cancel every plan in the world just to spend one more hour with you.",
+        "Warning: being this irresistible should be illegal. Just saying 😏",
+        "You're the only person who can make me feel nervous and safe at the exact same time.",
+        "I dare you to stop thinking about me right now. Can't do it, can you? 😏"
+      ],
+      impress: [
+        "The way you carry yourself — with such quiet grace and effortless beauty — genuinely takes my breath away.",
+        "I've met a lot of people. No one has ever made me feel the way you do just by existing.",
+        "You don't just inspire me — you make me want to become the best version of myself.",
+        "Your mind is as beautiful as your smile and that's saying something extraordinary.",
+        "I notice the little things about you — the way your eyes crinkle when you laugh. I notice everything.",
+        "You are simultaneously the most fascinating and most infuriating person I've ever met. I can't get enough.",
+        "I want to know every chapter of your story — the beautiful ones the difficult ones all of it.",
+        "The world genuinely becomes a more interesting place when you're in it.",
+        "You have this rare quality — when you talk people lean in. You command a room just by being yourself.",
+        "I keep finding new reasons to be amazed by you. I don't think I'll ever run out."
+      ]
+    };
+
+    function setTab(t) {
+      S.msgTab = t;
+      document.querySelectorAll('.tab').forEach(el => el.classList.remove('on'));
+      document.getElementById('t-' + t).classList.add('on');
+      document.getElementById('mc').innerHTML = '<div class="mph">✨ Click "Generate" to get a beautifully crafted message...</div>';
+      document.getElementById('cbtn').style.display = 'none';
+      document.getElementById('sbtn').style.display = 'none';
+      S.genMsg = '';
+    }
+
+    async function genMsg() {
+      if (S.isGen) return;
+      S.isGen = true;
+      const gb = document.getElementById('gbtn');
+      const mc = document.getElementById('mc');
+      gb.disabled = true; gb.textContent = '✨ Creating...';
+      mc.innerHTML = '<div style="display:flex;align-items:center;gap:8px;color:var(--mu);font-size:13px"><span style="animation:bc 1s step-end infinite;display:inline-block;width:8px;height:8px;background:var(--r);border-radius:50%">●</span> Crafting with AI...</div>';
+      const cats = { pickup: 'witty and charming pickup lines', romantic: 'deeply heartfelt romantic messages', hot: 'playful and flirtatious chat messages', impress: 'impressive and captivating lines to impress someone' };
+      try {
+        const res = await fetch("https://api.anthropic.com/v1/messages", {
+          method: "POST", headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ model: "claude-sonnet-4-20250514", max_tokens: 200, messages: [{ role: "user", content: `Generate ONE single ${cats[S.msgTab]} for a romantic partner. Make it original, genuine, beautifully written. IMPORTANT: Return ONLY the message itself — no quotes, no labels, no intro text. The message should be 1-3 sentences, emotionally resonant, and feel personal.` }] })
+        });
+        if (!res.ok) throw new Error();
+        const d = await res.json();
+        S.genMsg = d.content?.[0]?.text?.trim() || '';
+      } catch { S.genMsg = MSGS[S.msgTab][~~(Math.random() * 10)]; }
+      mc.innerHTML = '<div class="mtxt" id="mtyp"><span id="mc-cursor" class="cur"></span></div>';
+      await typeIt(S.genMsg);
+      document.getElementById('cbtn').style.display = '';
+      document.getElementById('sbtn').style.display = '';
+      gb.disabled = false; gb.innerHTML = '✨ Generate Another';
+      S.isGen = false;
+    }
+
+    async function typeIt(txt) {
+      const el = document.querySelector('#mtyp');
+      if (!el) return;
+      return new Promise(r => {
+        let i = 0;
+        const iv = setInterval(() => {
+          if (i <= txt.length) { el.innerHTML = txt.slice(0, i) + '<span class="cur"></span>'; i++; }
+          else { el.innerHTML = txt; clearInterval(iv); r(); }
+        }, 26);
+      });
+    }
+
+    function copyMsg() {
+      if (!S.genMsg) return;
+      navigator.clipboard.writeText(S.genMsg).catch(() => { });
+      showToast('✅ Copied to clipboard!');
+    }
+
+    function shareMsg() {
+      if (!S.genMsg) return;
+      if (navigator.share) navigator.share({ text: S.genMsg, title: 'A message just for you 💕' });
+      else copyMsg();
+    }
+
+    // ═══════════ STORY MAKER ═══════════
+    function trigUpload() {
+      if (!S.hasImg) document.getElementById('fup').click();
+    }
+
+    function onUpload(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = ev => {
+        const img = document.getElementById('si');
+        img.src = ev.target.result;
+        img.style.display = 'block';
+        document.getElementById('upl').style.display = 'none';
+        S.hasImg = true;
+        S.imgSrc = ev.target.result;
+        applyFrame(S.frame);
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function clearStory() {
+      document.getElementById('si').style.display = 'none';
+      document.getElementById('si').src = '';
+      document.getElementById('upl').style.display = 'flex';
+      document.getElementById('stxtl').innerHTML = '';
+      document.getElementById('sstkl').innerHTML = '';
+      document.getElementById('fup').value = '';
+      document.getElementById('txts-list').innerHTML = '';
+      S.hasImg = false; S.imgSrc = ''; S.texts = []; S.stickers = [];
+      S.vig = false;
+      document.getElementById('vig-t').classList.remove('on');
+      document.getElementById('svig').style.opacity = '0';
+      // Reset sliders
+      ['br', 'co', 'wa', 'sa'].forEach(k => {
+        const sl = document.getElementById('sl-' + k);
+        sl.value = { br: 100, co: 100, wa: 0, sa: 100 }[k];
+        updSliderBg(sl);
+        document.getElementById('sv-' + k).textContent = { br: '100%', co: '100%', wa: '0%', sa: '100%' }[k];
+      });
+      document.getElementById('si').style.filter = '';
+      applyFrame(S.frame);
+    }
+
+    function applyFrame(id) {
+      S.frame = id;
+      const fr = F.find(f => f.id === id);
+      if (!fr) return;
+      const can = document.getElementById('scan');
+      const ov = document.getElementById('sov');
+      const img = document.getElementById('si');
+      can.style.border = fr.bd;
+      can.style.borderRadius = '16px';
+      ov.style.background = fr.ov || 'transparent';
+      if (!S.hasImg) {
+        can.style.background = fr.bg;
+      } else {
+        can.style.background = 'transparent';
+      }
+      updEff();
+      // update selected in grid
+      document.querySelectorAll('.ft').forEach(el => {
+        el.classList.toggle('sel', +el.dataset.id === id);
+      });
+    }
+
+    function updEff() {
+      const br = document.getElementById('sl-br').value / 100;
+      const co = document.getElementById('sl-co').value / 100;
+      const wa = document.getElementById('sl-wa').value / 100;
+      const sa = document.getElementById('sl-sa').value / 100;
+      document.getElementById('sv-br').textContent = Math.round(br * 100) + '%';
+      document.getElementById('sv-co').textContent = Math.round(co * 100) + '%';
+      document.getElementById('sv-wa').textContent = Math.round(wa * 100) + '%';
+      document.getElementById('sv-sa').textContent = Math.round(sa * 100) + '%';
+      ['br', 'co', 'wa', 'sa'].forEach(k => updSliderBg(document.getElementById('sl-' + k)));
+      const fr = F.find(f => f.id === S.frame) || F[0];
+      const base = fr.fi || '';
+      const img = document.getElementById('si');
+      img.style.filter = `brightness(${br}) contrast(${co}) sepia(${wa}) saturate(${sa}) ${base}`;
+      S.effFilter = `brightness(${br}) contrast(${co}) sepia(${wa}) saturate(${sa})`;
+    }
+
+    function updSliderBg(sl) {
+      const min = +sl.min, max = +sl.max, val = +sl.value;
+      const pct = ((val - min) / (max - min) * 100).toFixed(1) + '%';
+      sl.style.setProperty('--v', pct);
+    }
+
+    function togVig() {
+      S.vig = !S.vig;
+      document.getElementById('vig-t').classList.toggle('on', S.vig);
+      document.getElementById('svig').style.opacity = S.vig ? '1' : '0';
+    }
+
+    // TEXT
+    function setPos(p) {
+      S.textPos = p;
+      document.querySelectorAll('.pb').forEach(b => b.classList.remove('on'));
+      document.getElementById('pt-' + p).classList.add('on');
+    }
+
+    function setTC(i, c) {
+      S.textColor = c;
+      document.querySelectorAll('.tc').forEach(el => el.classList.remove('on'));
+      document.getElementById('tc-' + i).classList.add('on');
+    }
+
+    function setSZ(s, px) {
+      S.textSz = s; S.textPx = px;
+      document.querySelectorAll('.szb').forEach(b => b.classList.remove('on'));
+      document.getElementById('sz-' + s).classList.add('on');
+    }
+
+    function addText() {
+      const inp = document.getElementById('tinp');
+      const txt = inp.value.trim();
+      if (!txt) return;
+      const item = { text: txt, pos: S.textPos, color: S.textColor, px: S.textPx, id: Date.now() };
+      S.texts.push(item);
+      inp.value = '';
+      renderTexts();
+      renderTxtList();
+    }
+
+    function renderTexts() {
+      const layer = document.getElementById('stxtl');
+      const posMap = { top: '12%', mid: '50%', bot: '88%' };
+      layer.innerHTML = S.texts.map(t => `
+    <div class="s-text-el" style="position:absolute;left:0;right:0;text-align:center;top:${posMap[t.pos]};transform:translateY(-50%);padding:0 14px;pointer-events:none">
+      <span style="font-family:'Playfair Display',serif;font-size:${t.px}px;color:${t.color};text-shadow:0 1px 4px rgba(0,0,0,.5),0 0 12px rgba(0,0,0,.3);line-height:1.4;font-style:italic;display:inline-block">${escHtml(t.text)}</span>
+    </div>
+  `).join('');
+    }
+
+    function renderTxtList() {
+      const el = document.getElementById('txts-list');
+      el.innerHTML = S.texts.map(t => `
+    <div style="display:flex;align-items:center;justify-content:space-between;background:#fff;border-radius:8px;padding:5px 9px;border:1px solid rgba(232,83,106,.1)">
+      <span style="font-size:11px;color:var(--tx);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escHtml(t.text)}</span>
+      <button onclick="rmTxt(${t.id})" style="background:none;border:none;cursor:pointer;color:var(--mu);font-size:13px;padding:0 2px;flex-shrink:0">✕</button>
+    </div>
+  `).join('');
+    }
+
+    function rmTxt(id) {
+      S.texts = S.texts.filter(t => t.id !== id);
+      renderTexts(); renderTxtList();
+    }
+
+    // STICKERS
+    const SPOS = [{ x: 15, y: 15 }, { x: 75, y: 10 }, { x: 10, y: 80 }, { x: 78, y: 75 }, { x: 45, y: 5 }, { x: 50, y: 90 }, { x: 5, y: 45 }, { x: 88, y: 45 }];
+    let stkIdx = 0;
+
+    function addStk(em) {
+      const pos = SPOS[stkIdx % SPOS.length]; stkIdx++;
+      const item = { em, x: pos.x, y: pos.y, id: Date.now() };
+      S.stickers.push(item);
+      renderStickers();
+    }
+
+    function renderStickers() {
+      const layer = document.getElementById('sstkl');
+      layer.innerHTML = S.stickers.map(s => `
+    <div class="sstk" style="left:${s.x}%;top:${s.y}%;transform:translate(-50%,-50%)">${s.em}</div>
+  `).join('');
+    }
+
+    function clearStks() {
+      S.stickers = []; stkIdx = 0;
+      document.getElementById('sstkl').innerHTML = '';
+    }
+
+    function escHtml(s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;') }
+
+    // DOWNLOAD
+    function dlStory() {
+      document.fonts.ready.then(() => {
+        const W = 1080, H = 1920;
+        const cv = document.getElementById('dlcanvas');
+        cv.width = W; cv.height = H;
+        const ctx = cv.getContext('2d');
+        const fr = F.find(f => f.id === S.frame) || F[0];
+
+        // Draw background
+        const bgGrad = fr.bg;
+        if (bgGrad.includes('gradient')) {
+          // Extract gradient colors for canvas fill
+          const matches = bgGrad.match(/#[0-9a-fA-F]{3,6}/g) || [];
+          if (matches.length >= 2) {
+            const g = ctx.createLinearGradient(0, 0, W, H);
+            matches.forEach((c, i) => g.addColorStop(i / (matches.length - 1), c));
+            ctx.fillStyle = g;
+          } else {
+            ctx.fillStyle = matches[0] || '#fdf8f5';
+          }
+        } else {
+          ctx.fillStyle = bgGrad;
+        }
+        ctx.fillRect(0, 0, W, H);
+
+        // Draw image if available
+        if (S.hasImg && S.imgSrc) {
+          const img = new Image();
+          img.onload = () => {
+            ctx.save();
+            ctx.filter = (S.effFilter || '') + (fr.fi ? ' ' + fr.fi : '');
+            const sc = Math.max(W / img.width, H / img.height);
+            const dw = img.width * sc, dh = img.height * sc;
+            const dx = (W - dw) / 2, dy = (H - dh) / 2;
+            ctx.drawImage(img, dx, dy, dw, dh);
+            ctx.restore();
+            drawOverlays(ctx, W, H, fr);
+          };
+          img.src = S.imgSrc;
+        } else {
+          drawOverlays(ctx, W, H, fr);
+        }
+      });
+    }
+
+    function drawOverlays(ctx, W, H, fr) {
+      // Overlay
+      if (fr.ov && fr.ov !== 'none' && fr.ov !== '') {
+        // Parse rgba
+        const m = fr.ov.match(/rgba?\(([^)]+)\)/);
+        if (m) {
+          const parts = m[1].split(',');
+          ctx.fillStyle = fr.ov;
+          ctx.fillRect(0, 0, W, H);
+        }
+        // Handle radial gradient vignette
+        if (fr.ov.includes('radial-gradient')) {
+          const vg = ctx.createRadialGradient(W / 2, H / 2, W * 0.3, W / 2, H / 2, W * 0.85);
+          vg.addColorStop(0, 'transparent'); vg.addColorStop(1, 'rgba(0,0,0,0.4)');
+          ctx.fillStyle = vg; ctx.fillRect(0, 0, W, H);
+        }
+      }
+      // Vignette
+      if (S.vig) {
+        const vg = ctx.createRadialGradient(W / 2, H / 2, W * 0.28, W / 2, H / 2, W * 0.78);
+        vg.addColorStop(0, 'transparent'); vg.addColorStop(1, 'rgba(0,0,0,0.44)');
+        ctx.fillStyle = vg; ctx.fillRect(0, 0, W, H);
+      }
+      // Stickers
+      ctx.font = `${Math.round(W * 0.08)}px serif`;
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      S.stickers.forEach(s => {
+        ctx.fillText(s.em, W * (s.x / 100), H * (s.y / 100));
+      });
+      // Texts
+      const posY = { top: H * 0.12, mid: H * 0.5, bot: H * 0.88 };
+      S.texts.forEach(t => {
+        const px = Math.round(t.px * (W / 240));
+        ctx.font = `italic ${px}px 'Playfair Display', serif`;
+        ctx.fillStyle = t.color || '#ffffff';
+        ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.shadowColor = 'rgba(0,0,0,0.5)'; ctx.shadowBlur = 8;
+        ctx.fillText(t.text, W / 2, posY[t.pos] || H * 0.88);
+        ctx.shadowBlur = 0;
+      });
+      // Download
+      const a = document.createElement('a');
+      a.download = 'my-love-story.jpg';
+      a.href = document.getElementById('dlcanvas').toDataURL('image/jpeg', 0.92);
+      a.click();
+      showToast('💕 Story downloaded successfully!');
+    }
+
+    // ═══════════ FRAME PICKER ═══════════
+    const CATS = ['All', 'Minimal', 'Floral', 'Dark Moody', 'Vintage', 'Neon', 'Pastel', 'Luxury', 'Seasonal', 'Aesthetic', 'Romance'];
+
+    function buildCats() {
+      const el = document.getElementById('fpcats');
+      el.innerHTML = CATS.map(c => `<button class="fpc ${c === 'All' ? 'on' : ''}" onclick="setCat('${c}')" id="fc-${c.replace(' ', '_')}">${c}</button>`).join('');
+    }
+
+    function setCat(cat) {
+      S.cat = cat;
+      document.querySelectorAll('.fpc').forEach(b => b.classList.remove('on'));
+      document.getElementById('fc-' + cat.replace(' ', '_')).classList.add('on');
+      buildGrid();
+    }
+
+    function buildGrid() {
+      const el = document.getElementById('fgrid');
+      const filtered = S.cat === 'All' ? F : F.filter(f => f.c === S.cat);
+      el.innerHTML = filtered.map(fr => `
+    <div class="ft ${fr.id === S.frame ? 'sel' : ''}" data-id="${fr.id}" onclick="applyFrame(${fr.id})" title="${fr.n}">
+      <div style="width:100%;height:100%;background:${fr.bg};border-radius:6px"></div>
+      <div class="ftlbl">${fr.n}</div>
+    </div>
+  `).join('');
+    }
+
+// ═══════════ MUSIC ═══════════
+    function togMus() {
+      S.musicOn = !S.musicOn;
+      const music = document.getElementById('music');
+      if (S.musicOn) {
+        music.play().catch(e => console.log(e));
+      } else {
+        music.pause();
+      }
+      document.getElementById('disc').classList.toggle('sp', S.musicOn);
+      document.getElementById('meq').style.display = S.musicOn ? 'flex' : 'none';
+      document.getElementById('msub').textContent = S.musicOn ? 'Now playing...' : 'Tap to play';
+    }
+
+    // ═══════════ INIT ═══════════
+    buildCats(); buildGrid(); applyFrame(1);
+    for (let i = 0; i < 4; i++)setTimeout(mkHeart, i * 500);
+    // Init slider visual state
+    ['br', 'co', 'sa'].forEach(k => updSliderBg(document.getElementById('sl-' + k)));
