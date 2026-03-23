@@ -1593,6 +1593,8 @@
     
     .mdel { font-size: 13px; cursor: pointer; opacity: 0.6; padding: 2px 4px; border-radius: 4px; transition: 0.2s; }
     .mdel:hover { opacity: 1; background: rgba(255,0,0,0.1); }
+  
+    body.fs-mode #priv > div:not(.cs) { display: none !important; }
   </style>
   <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
 </head>
@@ -1834,7 +1836,18 @@
                 <button class="btn btns" onclick="doLogout()" style="font-size:12px;padding:7px 14px">🚪 Leave</button>
               </div>
             </div>
-            <div class="msgs" id="msgs"></div>
+            
+  <div id="chat-hdr" style="display:none;justify-content:space-between;align-items:center;padding:12px;border-bottom:1px solid rgba(0,0,0,0.05);background:var(--w);z-index:100;flex-shrink:0;">
+    <div>
+      <div style="font-family:'Playfair Display',serif;font-size:18px;color:var(--rd);font-weight:700">Our Space</div>
+      <div style="font-size:11px;color:var(--mu);margin-top:2px">Password: <span id="hdr-pass" style="font-weight:bold;color:var(--tx)"></span></div>
+    </div>
+    <div style="display:flex;gap:8px">
+      <button class="btn btnp" style="padding:6px 12px;font-size:12px;background:var(--rd);border:none" onclick="openGames()">🎲 Games</button>
+      <button class="btn btns" style="padding:6px 12px;font-size:12px" onclick="doLogout()">Leave</button>
+    </div>
+  </div>
+  <div class="msgs" id="msgs"></div>
             <div id="att-prev" class="att-prev" style="display:none"></div>
             <div class="cr">
               <label class="btn btns" style="padding:10px;cursor:pointer" title="Attach Photo/Video">
@@ -1960,7 +1973,17 @@
     </div>
 
     
-    <!-- DEL MODAL -->
+    
+<!-- NAME MODAL -->
+<div class="modc" id="name-mod">
+  <div class="modb" style="width:280px;text-align:center;padding:24px">
+    <div style="font-family:'Playfair Display',serif;font-size:20px;margin-bottom:16px;color:var(--rd)">Welcome!</div>
+    <div style="font-size:13px;color:var(--mu);margin-bottom:16px">Enter your display name to join the chat</div>
+    <input type="text" id="n-inp" class="it" placeholder="Your Name" style="margin-bottom:16px" autocomplete="off">
+    <button class="btn btnp" style="width:100%;border:none;background:var(--r)" onclick="setName()">Join</button>
+  </div>
+</div>
+<!-- DEL MODAL -->
     <div class="modc" id="dmod">
       <div class="modb" style="width:280px;text-align:center;padding:24px">
         <div style="font-family:'Playfair Display',serif;font-size:20px;margin-bottom:16px;color:var(--rd)">Delete Message</div>
@@ -2670,6 +2693,13 @@ function doLogout(){
   document.getElementById('p2p-stat').style.color = 'var(--mu)';
 }
 
+
+function setName() {
+  const n = document.getElementById('n-inp').value.trim();
+  if(!n) return;
+  S.loginName = n;
+  document.getElementById('name-mod').classList.remove('on');
+}
 function renderMsgs(){
   const area=document.getElementById('msgs');
   area.innerHTML=S.msgs.map(m=>`
