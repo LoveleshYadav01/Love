@@ -1585,7 +1585,7 @@
     body.fs-mode .sepdiv, 
     body.fs-mode .footer { display: none !important; }
     
-    body.fs-mode { background: var(--bg); overflow: hidden; padding: 0; margin: 0; }
+    body.fs-mode { background: var(--iv); overflow: hidden; padding: 0; margin: 0; }
     body.fs-mode .app { padding: 0; max-width: 100%; }
     body.fs-mode #priv { padding-top: 0; margin-top: 0; min-height: 100vh; display: flex; flex-direction: column; }
     body.fs-mode .cs { height: 100vh; border-radius: 0; border: none; display: flex; flex-direction: column; box-shadow: none; margin: 0; }
@@ -1594,7 +1594,9 @@
     .mdel { font-size: 13px; cursor: pointer; opacity: 0.6; padding: 2px 4px; border-radius: 4px; transition: 0.2s; }
     .mdel:hover { opacity: 1; background: rgba(255,0,0,0.1); }
   
-    body.fs-mode #priv > div:not(.cs) { display: none !important; }
+    body.fs-mode #priv > .sechd { display: none !important; }
+    body.fs-mode .pw { max-width: 100%; width: 100%; margin: 0; display: flex; flex-direction: column; flex: 1; }
+    body.fs-mode #cview { display: flex; flex-direction: column; flex: 1; }
   </style>
   <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
 </head>
