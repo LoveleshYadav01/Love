@@ -1568,6 +1568,201 @@
       margin-bottom: 8px;
       overflow-x: auto
     }
+      color: var(--r)
+    }
+
+    .ttto {
+      color: var(--l)
+    }
+
+    /* Spin the Wheel */
+    .stw {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 20px 0
+    }
+
+    .stw-wrap {
+      position: relative;
+      width: 300px;
+      height: 300px;
+      margin-bottom: 20px
+    }
+
+    .stw-wh {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      border: 8px solid #fff;
+      box-shadow: 0 0 20px rgba(0, 0, 0, .1);
+      transition: transform 4s cubic-bezier(.25, .1, .25, 1);
+      position: relative;
+      overflow: hidden;
+      background: #fff
+    }
+
+    .stw-seg {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 50%;
+      height: 50%;
+      transform-origin: 0% 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-weight: 700;
+      font-size: 11px;
+      text-align: center;
+      padding: 10px;
+      box-sizing: border-box
+    }
+
+    .stw-pin {
+      position: absolute;
+      top: -15px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 15px solid transparent;
+      border-right: 15px solid transparent;
+      border-top: 30px solid var(--r);
+      z-index: 10
+    }
+
+    .stw-btn {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 48px;
+      height: 48px;
+      background: #fff;
+      border-radius: 50%;
+      border: 3px solid var(--r);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 12px;
+      color: var(--r);
+      cursor: pointer;
+      z-index: 10;
+      box-shadow: 0 0 10px rgba(0, 0, 0, .2)
+    }
+
+    .stw-btn:active {
+      transform: translate(-50%, -50%) scale(.95)
+    }
+
+    .stw-res {
+      font-size: 18px;
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      color: var(--tx);
+      min-height: 50px;
+      text-align: center;
+      margin-bottom: 20px;
+      padding: 0 20px
+    }
+
+    .stw-qi {
+      width: 100%;
+      padding: 7px 12px;
+      border-radius: 8px;
+      border: 1px solid rgba(232, 83, 106, .2);
+      font-family: 'Nunito', sans-serif;
+      font-size: 11px;
+      outline: none
+    }
+
+    .stw-qi:focus {
+      border-color: var(--r)
+    }
+
+    /* Show Your Card */
+    .syc {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 20px 0;
+      width: 100%
+    }
+
+    .syc-area {
+      display: flex;
+      gap: 20px;
+      width: 100%;
+      justify-content: center;
+      margin-top: 20px
+    }
+
+    .syc-card {
+      width: 200px;
+      height: 280px;
+      perspective: 1000px;
+      cursor: pointer
+    }
+
+    .syc-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transition: transform .8s;
+      transform-style: preserve-3d
+    }
+
+    .syc-card.flipped .syc-inner {
+      transform: rotateY(180deg)
+    }
+
+    .syc-face {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 16px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, .1);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      text-align: center;
+      word-break: break-word
+    }
+
+    .syc-front {
+      background: linear-gradient(135deg, var(--rl), var(--ll));
+      border: 2px solid var(--r)
+    }
+
+    .syc-back {
+      background: #fff;
+      transform: rotateY(180deg);
+      border: 2px solid var(--g)
+    }
+
+    .syc-img {
+      max-width: 100%;
+      max-height: 80%;
+      border-radius: 8px;
+      object-fit: cover
+    }
+
+    /* Media preview / attachments */
+    .att-prev {
+      display: flex;
+      gap: 8px;
+      padding: 8px;
+      background: rgba(255, 255, 255, .8);
+      border-radius: 8px;
+      margin-bottom: 8px;
+      overflow-x: auto
+    }
 
     .att-img {
       width: 60px;
@@ -1577,29 +1772,6 @@
       border: 1px solid #ddd
     }
   
-    /* Fullscreen Mode */
-    body.fs-mode .nav, 
-    body.fs-mode #hero, 
-    body.fs-mode #lgen, 
-    body.fs-mode #smem, 
-    body.fs-mode .sepdiv, 
-    body.fs-mode .footer { display: none !important; }
-    
-    body.fs-mode { background: var(--bg); overflow: hidden; padding: 0; margin: 0; }
-    body.fs-mode .app { padding: 0; max-width: 100%; }
-    body.fs-mode #priv { padding-top: 0; margin-top: 0; min-height: 100vh; display: flex; flex-direction: column; }
-    body.fs-mode .cs { height: 100vh; border-radius: 0; border: none; display: flex; flex-direction: column; box-shadow: none; margin: 0; }
-    body.fs-mode .msgs { flex: 1; height: auto; max-height: none; border-radius: 0; }
-    
-    .mdel { font-size: 13px; cursor: pointer; opacity: 0.6; padding: 2px 4px; border-radius: 4px; transition: 0.2s; }
-    .mdel:hover { opacity: 1; background: rgba(255,0,0,0.1); }
-  
-    body.fs-mode #priv > div:not(.cs) { display: none !important; }
-  </style>
-  <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
-</head>
-
-<body>
   <div class="prog" id="prog"></div>
   <div class="hc" id="hc"></div>
   <div class="app">
